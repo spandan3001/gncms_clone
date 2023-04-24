@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "131020519362",
+    "project_id": "gncms-clone",
+    "storage_bucket": "gncms-clone.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:131020519362:android:255a7be5001a3efe21885b",
+        "android_client_info": {
+          "package_name": "com.example.gncms_clone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "131020519362-od6pl57cekpuqqrbei2pp37uahrflhde.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiBh5WDsG9KXMTd0IiFTRbxjKlOVrjRL8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "131020519362-od6pl57cekpuqqrbei2pp37uahrflhde.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
