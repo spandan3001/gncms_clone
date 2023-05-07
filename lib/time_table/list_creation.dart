@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:gncms_clone/time_table/body_page.dart';
-import 'package:gncms_clone/time_table/t_card.dart';
+import 'package:gncms_clone/custom_widgets/t_card.dart';
 import 'package:flutter/material.dart';
 import 'constants.dart';
 
@@ -20,6 +20,8 @@ class ListCreation {
     ['62', '643', '63', '652', '0'],
     ['63', '643', '62', '652', 'l66'],
     ['61', '61', '62', '0', 'mp68'],
+    ['61', '61', '62', '0', '0'],
+    ['0', '0', '0', '0', '0'],
   ];
 
   var dayIndex = 5;

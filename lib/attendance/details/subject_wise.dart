@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 class SubjectWiseDetails extends StatelessWidget {
   const SubjectWiseDetails({Key? key}) : super(key: key);
 
+  static const id = '/attendance/details/subject_wise';
+
   TableRow buildRow({required List<String> children, isHeader}) => TableRow(
         decoration: isHeader
             ? const BoxDecoration(color: Colors.black12)

@@ -1,30 +1,31 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:gncms_clone/academic_calender/calendar_screen.dart';
+import 'package:gncms_clone/attendance/attendance_screen.dart';
+import 'package:gncms_clone/fees/fees_screen.dart';
 import 'package:gncms_clone/initial_data.dart';
-import 'package:gncms_clone/small_card.dart';
+import 'package:gncms_clone/custom_widgets/profile_card.dart';
+import 'package:gncms_clone/custom_widgets/small_card.dart';
 import 'package:flutter/material.dart';
+import 'package:gncms_clone/time_table/time_table_screen.dart';
+import 'package:gncms_clone/user_login_in/screens/login_page.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class StudentHomeScreen extends StatefulWidget {
+  const StudentHomeScreen({Key? key}) : super(key: key);
+
+  static const id = '/HomeScreen';
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<StudentHomeScreen> createState() => _StudentHomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-
-
-
+class _StudentHomeScreenState extends State<StudentHomeScreen> {
   @override
   void initState() {
     super.initState();
-    runMate();
-
-    setState(() {
-      data;
-    });
   }
+
   @override
   Widget build(BuildContext context) {
-
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -39,7 +40,8 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: PopupMenuButton(
                 shadowColor: Colors.black,
-                icon: const Icon(Icons.account_circle,size: 40,color:Colors.grey),
+                icon: const Icon(Icons.account_circle,
+                    size: 40, color: Colors.grey),
                 splashRadius: 20,
                 itemBuilder: (context) => [
                   const PopupMenuItem<int>(
@@ -59,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Text('🔙 Logout'),
                   ),
                 ],
-                onSelected: (item)=> selectedItem(context,item),
+                onSelected: (item) => selectedItem(context, item),
               ),
             ),
           ],
@@ -73,18 +75,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: (MediaQuery.of(context).size.height / 4),
                   color: Colors.black,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 8.0, horizontal: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "${data['firstName']} ${data['lastName']}",
+                          "${globalData['firstName']} ${globalData['lastName']}",
                           style: const TextStyle(
                               color: Colors.amber, fontWeight: FontWeight.bold),
                         ),
                         Text(
-                          "($usn)",
+                          "($globalUserId)",
                           style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -95,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Row(
                             children: [
                               Text(
-                                data['phoneNo'] ?? " ",
+                                globalData['phoneNo'],
                                 style: const TextStyle(
                                     color: Colors.white, fontSize: 12),
                               ),
@@ -107,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 thickness: 1,
                               ),
                               Text(
-                                data['email'] ?? " ",
+                                globalData['email'],
                                 style: const TextStyle(
                                     color: Colors.white, fontSize: 12),
                               ),
@@ -218,7 +219,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 150),
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 130),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: GridView.count(
@@ -230,7 +231,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       icon: Icons.calendar_month,
                       cardName: 'Academic Calender',
                       onPressed: () {
-                        Navigator.pushNamed(context, '/timeTable');
+                        Navigator.pushNamed(context, HomeCalendarScreen.id);
                       },
                       iconColor: Colors.blue,
                     ),
@@ -238,7 +239,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       icon: Icons.timelapse,
                       cardName: 'Timetable',
                       onPressed: () {
-                        Navigator.pushNamed(context, '/timeTable');
+                        Navigator.pushNamed(context, TimeTableScreen.id);
                       },
                       iconColor: Colors.blueAccent,
                     ),
@@ -246,7 +247,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       icon: Icons.people,
                       cardName: 'Attendance',
                       onPressed: () {
-                        Navigator.pushNamed(context, '/attendanceScreen');
+                        Navigator.pushNamed(context, AttendanceScreen.id);
                       },
                       iconColor: Colors.deepPurple,
                     ),
@@ -266,7 +267,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       icon: Icons.credit_card,
                       cardName: 'Fees',
                       onPressed: () {
-                        Navigator.pushNamed(context, '/fees');
+                        Navigator.pushNamed(context, FeeScreen.id);
                       },
                       iconColor: Colors.green,
                     ),
@@ -293,14 +294,19 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   selectedItem(BuildContext context, int item) {
-    switch(item){
-
-      case 0: Navigator.pushNamed(context,'/profile');
-      break;
-
-
+    switch (item) {
+      case 0:
+        Navigator.pushNamed(context, ProfileCardScreen.id);
+        break;
+      case 3:
+        Navigator.pop(context);
+        FirebaseAuth.instance.signOut();
+        Navigator.pushNamed(context, LoginScreen.id);
+        globalEmail = "";
+        globalCurrentUser = "";
+        globalUserId = "";
+        break;
     }
-
   }
 }
 
@@ -309,14 +315,12 @@ class CustomClipPath extends CustomClipper<Path> {
   Path getClip(Size size) {
     double width = size.width;
     double height = size.height;
-
     final path = Path();
 
     path.lineTo(0, height - 40);
     path.quadraticBezierTo(width / 2, height + 40, width, height - 40);
     path.lineTo(width, 0);
     path.close();
-
     return path;
   }
 

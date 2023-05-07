@@ -1,20 +1,19 @@
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:gncms_clone/admin/common/theme_helper.dart';
 
-import 'forgot_password_verification_page.dart';
-import 'login_page.dart';
+import '../common/theme_helper.dart';
 import 'widgets/header_widget.dart';
 
-class ForgotPasswordPage extends StatefulWidget {
-  const ForgotPasswordPage({Key? key}) : super(key: key);
+class ForgotPasswordScreen extends StatefulWidget {
+  const ForgotPasswordScreen({Key? key}) : super(key: key);
+
+  static const id = '/forgotPasswordScreen';
 
   @override
-  _ForgotPasswordPageState createState() => _ForgotPasswordPageState();
+  ForgotPasswordScreenState createState() => ForgotPasswordScreenState();
 }
 
-class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
+class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -42,25 +41,30 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: const [
-                            Text('Forgot Password?',
+                            Text(
+                              'Forgot Password?',
                               style: TextStyle(
                                   fontSize: 35,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.black54
-                              ),
+                                  color: Colors.black54),
                               // textAlign: TextAlign.center,
                             ),
-                            SizedBox(height: 10,),
-                            Text('Enter the email address associated with your account.',
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              'Enter the email address associated with your account.',
                               style: TextStyle(
-                                // fontSize: 20,
+                                  // fontSize: 20,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.black54
-                              ),
+                                  color: Colors.black54),
                               // textAlign: TextAlign.center,
                             ),
-                            SizedBox(height: 10,),
-                            Text('We will email you a verification code to check your authenticity.',
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              'We will email you a verification code to check your authenticity.',
                               style: TextStyle(
                                 color: Colors.black38,
                                 // fontSize: 20,
@@ -76,14 +80,17 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                         child: Column(
                           children: <Widget>[
                             Container(
-                              decoration: ThemeHelper().inputBoxDecorationShaddow(),
+                              decoration:
+                                  ThemeHelper().inputBoxDecorationShaddow(),
                               child: TextFormField(
-                                decoration: ThemeHelper().textInputDecoration("Email", "Enter your email"),
-                                validator: (val){
-                                  if(val!.isEmpty){
+                                decoration: ThemeHelper().textInputDecoration(
+                                    "Email", "Enter your email"),
+                                validator: (val) {
+                                  if (val!.isEmpty) {
                                     return "Email can't be empty";
-                                  }
-                                  else if(!RegExp(r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$").hasMatch(val)){
+                                  } else if (!RegExp(
+                                          r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$")
+                                      .hasMatch(val)) {
                                     return "Enter a valid email address";
                                   }
                                   return null;
@@ -92,12 +99,13 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                             ),
                             const SizedBox(height: 40.0),
                             Container(
-                              decoration: ThemeHelper().buttonBoxDecoration(context),
+                              decoration:
+                                  ThemeHelper().buttonBoxDecoration(context),
                               child: ElevatedButton(
-                                style: ThemeHelper().buttonStyle(),
+                                style: ThemeHelper().buttonStyle(Colors.black),
                                 child: Padding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                      40, 10, 40, 10),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(40, 10, 40, 10),
                                   child: Text(
                                     "Send".toUpperCase(),
                                     style: const TextStyle(
@@ -108,12 +116,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                   ),
                                 ),
                                 onPressed: () {
-                                  if(_formKey.currentState!.validate()) {
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => const ForgotPasswordVerificationPage()),
-                                    );
+                                  if (_formKey.currentState!.validate()) {
+                                    Navigator.pushReplacementNamed(
+                                        context, '/forgotPasswordVerification');
                                   }
                                 },
                               ),
@@ -122,19 +127,16 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                             Text.rich(
                               TextSpan(
                                 children: [
-                                  const TextSpan(text: "Remember your password? "),
+                                  const TextSpan(
+                                      text: "Remember your password? "),
                                   TextSpan(
                                     text: 'Login',
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => const LoginPage()),
-                                        );
+                                        Navigator.pushNamed(context, "/login");
                                       },
                                     style: const TextStyle(
-                                        fontWeight: FontWeight.bold
-                                    ),
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ],
                               ),
@@ -148,7 +150,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               )
             ],
           ),
-        )
-    );
+        ));
   }
 }

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:gncms_clone/attendance/details/day_wise.dart';
 import 'package:gncms_clone/attendance/details/subject_wise.dart';
+import 'package:gncms_clone/custom_widgets/tab_bar.dart';
 
 class DetailsScreen extends StatefulWidget {
   const DetailsScreen({Key? key}) : super(key: key);
+
+  static const id = '/attendance/details';
 
   @override
   State<DetailsScreen> createState() => _DetailsScreenState();
@@ -34,42 +37,21 @@ class _DetailsScreenState extends State<DetailsScreen>
       ),
       body: Column(
         children: [
-          Container(
-            height: (MediaQuery.of(context).size.height/100)*5,
-            margin: const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
-            decoration: const BoxDecoration(
-              color: Color(0xFF02BDEC),
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(5),
-                  topRight: Radius.circular(5)),
-            ),
-            child: TabBar(
-                unselectedLabelColor: Colors.white,
-                labelColor: Colors.black,
-                indicatorWeight: 2,
-                indicator: BoxDecoration(
-                  color: Colors.blue.withOpacity(0.5),
-                  borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(5),
-                      topRight: Radius.circular(5)),
-                ),
-                controller: _tabController,
-                tabs: const [
-                  Tab(
-                    text: "Subject Wise",
-                  ),
-                  Tab(
-                    text: "Day Wise",
-                  )
-                ],
+          CustomTabBar(
+            tabController: _tabController,
+            tabs: const [
+              Tab(
+                text: "Subject Wise",
               ),
-            ),
+              Tab(
+                text: "Day Wise",
+              )
+            ],
+          ),
           Expanded(
-            child:
-            TabBarView(controller: _tabController, children: [
+            child: TabBarView(controller: _tabController, children: const [
               SubjectWiseDetails(),
               DayWiseDetails(),
-
             ]),
           ),
         ],

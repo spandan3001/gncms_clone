@@ -16,6 +16,7 @@ class CardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
       elevation: 5.0,
       child: InkWell(
         radius: 30,
@@ -26,10 +27,10 @@ class CardWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Icon(
-                  icon,
-                  size: 40,
-                  color: iconColor,
-                ),
+                icon,
+                size: 40,
+                color: iconColor,
+              ),
               RichText(
                 textAlign: TextAlign.center,
                 text: TextSpan(

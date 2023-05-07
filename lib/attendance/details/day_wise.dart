@@ -4,6 +4,8 @@ import 'package:gncms_clone/attendance/details/day_wise_display_widget.dart';
 class DayWiseDetails extends StatelessWidget {
   const DayWiseDetails({Key? key}) : super(key: key);
 
+  static const id = '/attendance/details/day_wise';
+
   TableRow buildRow({required List<String> children , isHeader}) {
     List<Widget> newTableChildren = [
       isHeader ? const Center(child: Text('Date')) : const Center(child: Text('18-Apr')),

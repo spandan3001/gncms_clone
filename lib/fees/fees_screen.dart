@@ -3,6 +3,7 @@ import 'package:gncms_clone/fees/icon_animation_button.dart';
 
 class FeeScreen extends StatelessWidget {
   const FeeScreen({Key? key}) : super(key: key);
+  static const id = '/feeScreen';
 
   @override
   Widget build(BuildContext context) {

@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:gncms_clone/admin/admin_login.dart';
+import 'package:gncms_clone/academic_calender/calendar_screen.dart';
+import 'package:gncms_clone/academic_calender/complex_calendar.dart';
+
 import 'package:gncms_clone/attendance/details/details_screen.dart';
 import 'package:gncms_clone/fees/fees_screen.dart';
-import 'package:gncms_clone/profile_card.dart';
-import 'package:gncms_clone/time_table/tab_bar.dart';
-import 'home_screen.dart';
+import 'package:gncms_clone/custom_widgets/profile_card.dart';
+import 'package:gncms_clone/teacher/add_student.dart';
+import 'package:gncms_clone/teacher/teacher_home_screen.dart';
+import 'package:gncms_clone/teacher/teacher_time_table_screen.dart';
+import 'package:gncms_clone/time_table/time_table_screen.dart';
+import 'package:gncms_clone/user_login_in/screen_decider.dart';
+import 'package:gncms_clone/user_login_in/screens/forgot_password_page.dart';
+import 'package:gncms_clone/user_login_in/screens/forgot_password_verification_page.dart';
+import 'package:gncms_clone/user_login_in/screens/login_page.dart';
+import 'package:gncms_clone/user_login_in/screens/splash_screen.dart';
+import 'student_home_screen.dart';
 import 'attendance/attendance_screen.dart';
 import 'attendance/details/subject_wise.dart';
 import 'attendance/details/day_wise.dart';
@@ -28,18 +38,27 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/adminLogin',
+      initialRoute: SplashScreen.id,
       routes: {
-        '/': (context) => const HomeScreen(),
-        '/adminLogin': (context) => AdminLogin(),
-        '/timeTable': (context) => const TabBarPage(),
-        '/profile': (context) => const ProfileCard(),
-        '/attendanceScreen': (context) => const AttendanceScreen(),
-        '/fees': (context) => const FeeScreen(),
-        '/attendance/details/subject_wise': (context) =>
-            const SubjectWiseDetails(),
-        '/attendance/details/day_wise': (context) => const DayWiseDetails(),
-        '/attendance/details': (context) => const DetailsScreen(),
+        StudentHomeScreen.id: (context) => const StudentHomeScreen(),
+        TimeTableScreen.id: (context) => const TimeTableScreen(),
+        ProfileCardScreen.id: (context) => const ProfileCardScreen(),
+        AttendanceScreen.id: (context) => const AttendanceScreen(),
+        FeeScreen.id: (context) => const FeeScreen(),
+        SubjectWiseDetails.id: (context) => const SubjectWiseDetails(),
+        DayWiseDetails.id: (context) => const DayWiseDetails(),
+        DetailsScreen.id: (context) => const DetailsScreen(),
+        ForgotPasswordVerificationScreen.id: (context) =>
+            const ForgotPasswordVerificationScreen(),
+        LoginScreen.id: (context) => const LoginScreen(),
+        ForgotPasswordScreen.id: (context) => const ForgotPasswordScreen(),
+        SplashScreen.id: (context) => const SplashScreen(),
+        ScreenDecider.id: (context) => const ScreenDecider(),
+        TeacherHomeScreen.id: (context) => const TeacherHomeScreen(),
+        TeacherTimeTableScreen.id: (context) => const TeacherTimeTableScreen(),
+        AddStudent.id: (context) => AddStudent(),
+        HomeCalendarScreen.id: (context) => const HomeCalendarScreen(),
+        TableComplexExample.id: (context) => const TableComplexExample(),
       },
     );
   }

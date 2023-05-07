@@ -4,17 +4,17 @@ import 'package:hexcolor/hexcolor.dart';
 
 class ThemeHelper{
 
-  InputDecoration textInputDecoration([String lableText="", String hintText = ""]){
+  InputDecoration textInputDecoration([String lableText = " ", String hintText = " "]){
     return InputDecoration(
       labelText: lableText,
       hintText: hintText,
       fillColor: Colors.white,
       filled: true,
       contentPadding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-      focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(100.0), borderSide: const BorderSide(color: Colors.grey)),
-      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(100.0), borderSide: BorderSide(color: Colors.grey.shade400)),
-      errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(100.0), borderSide: const BorderSide(color: Colors.red, width: 2.0)),
-      focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(100.0), borderSide: const BorderSide(color: Colors.red, width: 2.0)),
+      focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0), borderSide: const BorderSide(color: Colors.grey)),
+      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0), borderSide: BorderSide(color: Colors.grey.shade400)),
+      errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0), borderSide: const BorderSide(color: Colors.red, width: 2.0)),
+      focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0), borderSide: const BorderSide(color: Colors.red, width: 2.0)),
     );
   }
 
@@ -29,8 +29,8 @@ class ThemeHelper{
   }
 
   BoxDecoration buttonBoxDecoration(BuildContext context, [String color1 = "", String color2 = ""]) {
-    Color c1 = Theme.of(context).primaryColor;
-    Color c2 = Theme.of(context).colorScheme.secondary;
+    Color c1 = Colors.blue;
+    Color c2 = Colors.blueAccent;
     if (color1.isEmpty == false) {
       c1 = HexColor(color1);
     }
@@ -51,21 +51,22 @@ class ThemeHelper{
           c2,
         ],
       ),
-      color: Colors.deepPurple.shade300,
+      color: Colors.blue,
       borderRadius: BorderRadius.circular(30),
     );
   }
 
-  ButtonStyle buttonStyle() {
+  ButtonStyle buttonStyle(Color color) {
     return ButtonStyle(
       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
         RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
+          borderRadius: BorderRadius.circular(10.0),
         ),
       ),
-      minimumSize: MaterialStateProperty.all(const Size(50, 50)),
-      backgroundColor: MaterialStateProperty.all(Colors.transparent),
+      minimumSize: MaterialStateProperty.all(const Size(double.infinity, 50)),
+      backgroundColor: MaterialStateProperty.all(color),
       shadowColor: MaterialStateProperty.all(Colors.transparent),
+      overlayColor: MaterialStateProperty.all(Colors.transparent),
     );
   }
 
@@ -76,19 +77,18 @@ class ThemeHelper{
       actions: [
         TextButton(
           style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Colors.black38)),
+            backgroundColor: MaterialStateProperty.all(Colors.black38),),
           onPressed: () {
             Navigator.of(context).pop();
           },
           child: const Text(
             "OK",
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: Colors.white,),
           ),
         ),
       ],
     );
   }
-
 }
 
 class LoginFormStyle{

@@ -2,23 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:gncms_clone/initial_data.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class ProfileCard extends StatefulWidget {
-  const ProfileCard({Key? key}) : super(key: key);
+class ProfileCardScreen extends StatefulWidget {
+  const ProfileCardScreen({Key? key}) : super(key: key);
+  static const id = '/profileCardScreen';
 
   @override
-  State<ProfileCard> createState() => _ProfileCardState();
+  State<ProfileCardScreen> createState() => _ProfileCardScreenState();
 }
 
-class _ProfileCardState extends State<ProfileCard> {
+class _ProfileCardScreenState extends State<ProfileCardScreen> {
   late double _detailButtonWidth = 20.0;
   String usn = '1MV20CS136';
 
   @override
   void initState() {
-    setState(() {
-    });
+    setState(() {});
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     _detailButtonWidth = MediaQuery.of(context).size.width - 30;
@@ -44,14 +45,22 @@ class _ProfileCardState extends State<ProfileCard> {
                   ),
                   child: Column(
                     children: [
-                      studentDetail(Icons.phone,'Student Number',data['phoneNo']),
-                      studentDetail(Icons.email,'Student Email',data['email']),
-                      studentDetail(Icons.phone,'Father Number',data['fatherPhoneNo']),
-                      studentDetail(Icons.email,'Father Email',data['fatherEmail']),
-                      studentDetail(Icons.phone,'Mother Number',data['motherPhoneNo']),
-                      studentDetail(Icons.email,'Father Email',data['motherEmail']),
-                      studentDetail(Icons.phone,'Guardian Number',data['guardianPhoneNo']),
-                      studentDetail(Icons.email,'Guardian Email',data['guardianEmail']),
+                      studentDetail(
+                          Icons.phone, 'Student Number', globalData['phoneNo']),
+                      studentDetail(
+                          Icons.email, 'Student Email', globalData['email']),
+                      studentDetail(Icons.phone, 'Father Number',
+                          globalData['fatherPhoneNo']),
+                      studentDetail(Icons.email, 'Father Email',
+                          globalData['fatherEmail']),
+                      studentDetail(Icons.phone, 'Mother Number',
+                          globalData['motherPhoneNo']),
+                      studentDetail(Icons.email, 'Father Email',
+                          globalData['motherEmail']),
+                      studentDetail(Icons.phone, 'Guardian Number',
+                          globalData['guardianPhoneNo']),
+                      studentDetail(Icons.email, 'Guardian Email',
+                          globalData['guardianEmail']),
                     ],
                   ),
                 )
@@ -89,7 +98,7 @@ class _ProfileCardState extends State<ProfileCard> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              "${data['firstName']} ${data['lastName']}",
+                              "${globalData['firstName']} ${globalData['lastName']}",
                               style: const TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold),
@@ -220,7 +229,11 @@ class _ProfileCardState extends State<ProfileCard> {
     );
   }
 
-  Column studentDetail(IconData icon,String header,String value,) {
+  Column studentDetail(
+    IconData icon,
+    String header,
+    String value,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -230,21 +243,18 @@ class _ProfileCardState extends State<ProfileCard> {
         ),
         TextButton(
           style: ButtonStyle(
-            backgroundColor:
-            MaterialStateProperty.all(Colors.blue.shade200),
-            fixedSize: MaterialStateProperty.all(
-                Size(_detailButtonWidth, 40)),
+            backgroundColor: MaterialStateProperty.all(Colors.blue.shade200),
+            fixedSize: MaterialStateProperty.all(Size(_detailButtonWidth, 40)),
             shape: MaterialStateProperty.all(
               const RoundedRectangleBorder(
-                  borderRadius:
-                  BorderRadius.all(Radius.circular(20))),
+                  borderRadius: BorderRadius.all(Radius.circular(20))),
             ),
           ),
-          onPressed: () async{
-            if(icon == Icons.phone) {
+          onPressed: () async {
+            if (icon == Icons.phone) {
               Uri url = Uri(scheme: 'tel', path: value);
               await launchUrl(url);
-            }else{
+            } else {
               Uri url = Uri(scheme: 'mailto', path: value);
               await launchUrl(url);
             }
@@ -255,7 +265,8 @@ class _ProfileCardState extends State<ProfileCard> {
               Row(
                 children: [
                   Icon(
-                    icon,color:Colors.black,
+                    icon,
+                    color: Colors.black,
                   ),
                   const SizedBox(
                     width: 20,
@@ -266,8 +277,7 @@ class _ProfileCardState extends State<ProfileCard> {
                   )
                 ],
               ),
-              const Icon(Icons.keyboard_arrow_right,
-                  color: Colors.black),
+              const Icon(Icons.keyboard_arrow_right, color: Colors.black),
             ],
           ),
         ),
