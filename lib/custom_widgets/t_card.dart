@@ -19,7 +19,7 @@ class TCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: isActive ? Colors.blue : Theme.of(context).colorScheme.surface,
+      color: isActive ? Colors.blue : Colors.white,
       shadowColor: Theme.of(context).colorScheme.shadow,
       surfaceTintColor: Theme.of(context).colorScheme.primary,
       elevation: 5.0,

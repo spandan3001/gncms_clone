@@ -17,7 +17,7 @@ class SplashScreen extends StatefulWidget {
 class SplashScreenState extends State<SplashScreen> {
   bool _isVisible = false;
   void initData() async {
-    await getUser();
+    await globalObj.getUser();
   }
 
   SplashScreenState() {

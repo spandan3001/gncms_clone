@@ -202,9 +202,7 @@ class TeacherHomeScreen extends StatelessWidget {
         Navigator.pop(context);
         FirebaseAuth.instance.signOut();
         Navigator.pushNamed(context, LoginScreen.id);
-        globalEmail = "";
-        globalCurrentUser = "";
-        globalUserId = "";
+        InitialData.initGlobalData();
         break;
     }
   }

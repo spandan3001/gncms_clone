@@ -5,6 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:gncms_clone/initial_data.dart';
+import 'package:provider/provider.dart';
 import '../../custom_widgets/custom_radio_button.dart';
 import '../common/theme_helper.dart';
 import '../screen_decider.dart';
@@ -123,19 +124,26 @@ class LoginScreenState extends State<LoginScreen> {
                                   color: Colors.red,
                                 )),
                           const SizedBox(height: 15.0),
-                          ElevatedButton(
-                            style: ThemeHelper().buttonStyle(
-                                isActive ? Colors.black : Colors.grey),
-                            child: Text(
-                              'Log in'.toUpperCase(),
-                              style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
+                          Consumer<InitialData>(
+                            builder: (context, dataClass, child) =>
+                                ElevatedButton(
+                              style: ThemeHelper().buttonStyle(
+                                isActive ? Colors.black : Colors.grey,
+                              ),
+                              child: Text(
+                                'Log in'.toUpperCase(),
+                                style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                              ),
+                              onPressed: () {
+                                isActive
+                                    ? signIn(dataClass.writeLocalData,
+                                        dataClass.getUser)
+                                    : {};
+                              },
                             ),
-                            onPressed: () {
-                              isActive ? signIn() : {};
-                            },
                           ),
                           Container(
                             margin: const EdgeInsets.fromLTRB(10, 20, 10, 20),
@@ -169,11 +177,11 @@ class LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void signIn() async {
+  void signIn(Function writeLocalData, Function getUser) async {
     //await getUser();
     try {
       loadingDialog();
-      await isEmail();
+      await isEmail(writeLocalData, getUser);
       await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: _emailPassed, password: _passwordController.text);
       navigateAuthScreen();
@@ -182,7 +190,7 @@ class LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  Future<void> isEmail() async {
+  Future<void> isEmail(Function writeLocalData, Function getUser) async {
     //check weather email or usn
     RegExp exp = RegExp(
         r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$",
@@ -194,7 +202,6 @@ class LoginScreenState extends State<LoginScreen> {
         .collection('users')
         .doc(character!.name)
         .get();
-
     if (exp.hasMatch(_emailEnteredController.text)) {
       _emailPassed = _emailEnteredController.text;
       userId = snap.data()![_emailPassed]['userId'];
@@ -205,7 +212,8 @@ class LoginScreenState extends State<LoginScreen> {
 
     writeLocalData(
         currentUser: character!.name, email: _emailPassed, userId: userId);
-    print("$globalUserId  $globalCurrentUser $globalEmail");
+    print(
+        "$InitialData.globalUserId  $InitialData.globalCurrentUser $InitialData.globalEmail");
     await getUser();
   }
 

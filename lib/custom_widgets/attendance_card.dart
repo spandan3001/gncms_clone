@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 
+import '../initial_data.dart';
+
 class AttendanceCard extends StatelessWidget {
-
-
-  //final percentageAttendance;
-  const AttendanceCard({Key? key}) : super(key: key);
+  const AttendanceCard(
+      {Key? key,
+      required this.sem,
+      required this.batch,
+      required this.totalPercentage})
+      : super(key: key);
+  final String sem;
+  final String batch;
+  final double totalPercentage;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -14,12 +21,15 @@ class AttendanceCard extends StatelessWidget {
         borderRadius: const BorderRadius.all(Radius.circular(5.0)),
         type: MaterialType.card,
         child: InkWell(
-          onTap: () { Navigator.pushNamed(context, '/attendance/details'); },
+          onTap: () {
+            Navigator.pushNamed(context, '/attendance/details');
+            InitialData.globalCurrentSem = sem;
+            InitialData.globalCurrentBatch = batch;
+          },
           child: SizedBox(
             height: 60,
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 10.0),
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: Column(
                 children: [
                   Row(
@@ -35,19 +45,19 @@ class AttendanceCard extends StatelessWidget {
                               Row(
                                 children: [
                                   Container(
-                                      height: 20.0,
-                                      width: 50.0,
-                                      color: Colors.black,
-                                      child: const Center(
-                                        child: Text(
-                                          'Sem-6',
-                                          style: TextStyle(
-                                            fontSize: 10.0,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                          ),
+                                    height: 20.0,
+                                    width: 50.0,
+                                    color: Colors.black,
+                                    child: Center(
+                                      child: Text(
+                                        sem,
+                                        style: const TextStyle(
+                                          fontSize: 10.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
                                         ),
                                       ),
+                                    ),
                                   ),
                                   const SizedBox(
                                     width: 10,
@@ -55,13 +65,13 @@ class AttendanceCard extends StatelessWidget {
                                   const Text(
                                     'A.Y.  ',
                                     style: TextStyle(
-                                      color: Colors.grey,
+                                        color: Colors.grey,
                                         fontSize: 15.0,
                                         fontWeight: FontWeight.bold),
                                   ),
-                                  const Text(
-                                    '2022-23',
-                                    style: TextStyle(
+                                  Text(
+                                    batch,
+                                    style: const TextStyle(
                                         fontSize: 15.0,
                                         fontWeight: FontWeight.bold),
                                   ),
@@ -81,19 +91,23 @@ class AttendanceCard extends StatelessWidget {
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: const [
+                    children: [
                       Expanded(
                         child: Padding(
-                          padding: EdgeInsets.only(right: 30),
+                          padding: const EdgeInsets.only(right: 30),
                           child: LinearProgressIndicator(
-                            value: 0.72,
+                            value: totalPercentage / 100,
                             minHeight: 5,
-                            backgroundColor: Color(0xFFEAFAF5),
-                            valueColor: AlwaysStoppedAnimation(Color(0xFF07BD84)),
+                            backgroundColor: const Color(0xFFEAFAF5),
+                            valueColor:
+                                const AlwaysStoppedAnimation(Color(0xFF07BD84)),
                           ),
                         ),
                       ),
-                      Text("72.00%")
+                      Text(
+                        '${totalPercentage.toString()}%',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      )
                     ],
                   ),
                 ],

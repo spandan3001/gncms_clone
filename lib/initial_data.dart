@@ -1,75 +1,133 @@
 import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-FirebaseFirestore database = FirebaseFirestore.instance;
-late SharedPreferences prefs;
-
-Future<void> initLocalData() async {
-  prefs = await SharedPreferences.getInstance();
-}
 
 enum SingingCharacter { teacher, student }
 
-Map<String, dynamic> globalData = {};
-String globalCurrentUser = "";
-String globalUserId = "";
-String globalEmail = "";
+InitialData globalObj = InitialData();
 
-Future<void> writeLocalData(
-    {required String currentUser,
-    required String email,
-    required String userId}) async {
-  initLocalData();
-  String data =
-      jsonEncode({'user': currentUser, 'email': email, 'userId': userId});
-  await prefs.setString('currentUser', data);
-  //print(data);
-}
+class InitialData extends ChangeNotifier {
+  FirebaseFirestore database = FirebaseFirestore.instance;
+  late SharedPreferences prefs;
 
-Future<void> getUser() async {
-  //get the current user
-  await initLocalData();
-  final String action = prefs.getString('currentUser') ?? "";
-  if (action.isNotEmpty) {
-    Map<String, dynamic> data = jsonDecode(action);
-    globalCurrentUser = data['user'];
-    globalUserId = data['userId'];
-    globalEmail = data['email'];
-    await getUserDetails();
+  Future<void> initLocalData() async {
+    prefs = await SharedPreferences.getInstance();
   }
-}
 
-Future<void> getUserDetails() async {
-  print("$globalUserId  $globalCurrentUser $globalEmail");
-  //get brief info abt the user
-  final snap2 = await database.collection('users').doc(globalCurrentUser).get();
-  final dataUser = snap2.data()![globalEmail];
+  static Map<String, dynamic> globalData = {};
+  static Map<String, dynamic> globalCurrentSubjects = {};
+  static Map<String, dynamic> globalUserAttendance = {};
+  static String globalCurrentUser = "";
+  static String globalUserId = "";
+  static String globalEmail = "";
+  static String globalUserBranch = "";
+  static String globalCurrentSem = "";
+  static String globalCurrentBatch = "";
+  static String _currentUser = "";
 
-  //actual data
-  final snap3 = await database
-      .collection(globalCurrentUser)
-      .doc(dataUser['branch'])
-      .get();
-
-  if (globalCurrentUser == SingingCharacter.teacher.name) {
-    getTeacher(snap3);
-  } else if (globalCurrentUser == SingingCharacter.student.name) {
-    String semNotation = "sem-${dataUser['sem']}";
-    String sectionNotation = "section-${dataUser['section']}";
-    await getStudent(snap3, semNotation, sectionNotation);
+  static Future<void> initGlobalData() async {
+    globalData = {};
+    globalCurrentSubjects = {};
+    globalUserAttendance = {};
+    globalCurrentUser = "";
+    globalUserId = "";
+    globalEmail = "";
+    globalUserBranch = "";
+    globalCurrentSem = "";
+    globalCurrentBatch = "";
+    await globalObj.writeInitGlobalData();
   }
-  print("in it $globalUserId");
-}
 
-Future<void> getStudent(DocumentSnapshot<Map<String, dynamic>> snapshot,
-    String semNotation, String sectionNotation) async {
-  globalData = snapshot.data()![semNotation][sectionNotation][globalUserId];
-}
+  Future<void> writeInitGlobalData() async {
+    initLocalData();
 
-Future<void> getTeacher(DocumentSnapshot<Map<String, dynamic>> snapshot) async {
-  globalData = snapshot.data()![globalUserId];
+    await prefs.remove('currentUser');
+  }
+
+  Future<void> writeLocalData(
+      {required String currentUser,
+      required String email,
+      required String userId}) async {
+    await initLocalData();
+    String data =
+        jsonEncode({'user': currentUser, 'email': email, 'userId': userId});
+    await prefs.setString('currentUser', data);
+    //print(data);
+  }
+
+  void getLocalData() {
+    _currentUser = prefs.getString('currentUser') ?? "";
+  }
+
+  Future<void> getUser() async {
+    //get the current user
+    await initLocalData();
+    getLocalData();
+    if (_currentUser.isNotEmpty) {
+      Map<String, dynamic> data = jsonDecode(_currentUser);
+      globalCurrentUser = data['user'];
+      globalUserId = data['userId'];
+      globalEmail = data['email'];
+      await getUserDetails();
+      await getSubject();
+      await getAttendance();
+    }
+  }
+
+  Future<void> getSubject() async {
+    final snap =
+        await database.collection('subject').doc(globalUserBranch).get();
+    globalCurrentSubjects = snap.data()!;
+    print(globalCurrentSubjects);
+  }
+
+  Future<void> getAttendance() async {
+    final snap =
+        await database.collection('attendance').doc(globalUserBranch).get();
+    globalUserAttendance = snap.data()![globalUserId];
+    List<MapEntry<String, dynamic>> listData =
+        globalUserAttendance.entries.toList();
+
+    listData.sort((a, b) => a.key.compareTo(b.key));
+
+    globalUserAttendance = Map.fromEntries(listData);
+    //print(globalUserAttendance);
+  }
+
+  Future<void> getUserDetails() async {
+    //get brief info abt the user
+    final snap2 =
+        await database.collection('users').doc(globalCurrentUser).get();
+    final dataUser = snap2.data()![globalEmail];
+    globalUserBranch = dataUser['branch'];
+
+    //actual data
+    final snap3 = await database
+        .collection(globalCurrentUser)
+        .doc(globalUserBranch)
+        .get();
+
+    if (globalCurrentUser == SingingCharacter.teacher.name) {
+      getTeacher(snap3);
+    } else if (globalCurrentUser == SingingCharacter.student.name) {
+      String semNotation = "sem-${dataUser['sem']}";
+      //globalUserBatch = snap3.data()![semNotation];
+      //print(globalUserBatch);
+      String sectionNotation = "section-${dataUser['section']}";
+      await getStudent(snap3, semNotation, sectionNotation);
+    }
+  }
+
+  Future<void> getStudent(DocumentSnapshot<Map<String, dynamic>> snapshot,
+      String semNotation, String sectionNotation) async {
+    globalData = snapshot.data()![semNotation][sectionNotation][globalUserId];
+  }
+
+  Future<void> getTeacher(
+      DocumentSnapshot<Map<String, dynamic>> snapshot) async {
+    globalData = snapshot.data()![globalUserId];
+  }
 }
 
 //   String firstName = '',

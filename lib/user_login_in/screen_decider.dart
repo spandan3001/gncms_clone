@@ -21,10 +21,10 @@ class _ScreenDeciderState extends State<ScreenDecider> {
       body: StreamBuilder<User?>(
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           if (snapshot.hasData &&
-              globalCurrentUser == SingingCharacter.student.name) {
+              InitialData.globalCurrentUser == SingingCharacter.student.name) {
             return const StudentHomeScreen();
           } else if (snapshot.hasData &&
-              globalCurrentUser == SingingCharacter.teacher.name) {
+              InitialData.globalCurrentUser == SingingCharacter.teacher.name) {
             return const TeacherHomeScreen();
           } else {
             return const LoginScreen();

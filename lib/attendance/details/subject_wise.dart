@@ -1,29 +1,64 @@
 import 'package:flutter/material.dart';
+import 'package:gncms_clone/initial_data.dart';
 
 class SubjectWiseDetails extends StatelessWidget {
   const SubjectWiseDetails({Key? key}) : super(key: key);
 
   static const id = '/attendance/details/subject_wise';
 
-  TableRow buildRow({required List<String> children, isHeader}) => TableRow(
+  TableRow buildRow({required List<String> children, attendance, isHeader}) =>
+      TableRow(
         decoration: isHeader
             ? const BoxDecoration(color: Colors.black12)
             : const BoxDecoration(),
-        children: children
-            .map(
-              (cell) => Padding(
-                padding: const EdgeInsets.all(5),
-                child: Center(
+        children: [
+          ...children
+              .map(
+                (cell) => Padding(
+                  padding: const EdgeInsets.all(5),
                   child: Text(
                     cell,
+                    textAlign: TextAlign.start,
                     style: const TextStyle(
-                        fontSize: 10, fontWeight: FontWeight.bold),
+                        fontSize: 12, fontWeight: FontWeight.bold),
                   ),
                 ),
+              )
+              .toList(),
+          if (!isHeader)
+            Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Center(
+                child: Text(
+                  '${attendance.toString()}%',
+                  style: TextStyle(
+                      color: attendance < 85 ? Colors.red : Colors.green,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold),
+                ),
               ),
-            )
-            .toList(),
+            ),
+        ],
       );
+  List<TableRow> tableContent() {
+    List<TableRow> children = [];
+    Map<String, dynamic> subjects =
+        InitialData.globalCurrentSubjects[InitialData.globalCurrentSem];
+    List<String> temp;
+    print(subjects);
+    InitialData.globalUserAttendance[InitialData.globalCurrentSem]
+        .forEach((key, value) {
+      temp = [];
+      if (key != 'batch' && key != 'totalPercentage') {
+        temp.add(subjects[key]);
+        temp.add(value['total'].toString());
+        temp.add(value['present'].toString());
+        children.add(buildRow(
+            children: temp, attendance: value['percentage'], isHeader: false));
+      }
+    });
+    return children;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,10 +72,10 @@ class SubjectWiseDetails extends StatelessWidget {
                 height: 20.0,
                 width: 50.0,
                 color: Colors.black,
-                child: const Center(
+                child: Center(
                   child: Text(
-                    'Sem-6',
-                    style: TextStyle(
+                    InitialData.globalCurrentSem,
+                    style: const TextStyle(
                       fontSize: 10.0,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
@@ -52,15 +87,16 @@ class SubjectWiseDetails extends StatelessWidget {
                 width: 10,
               ),
               const Text(
-                'A.Y.  ',
+                'A.Y. ',
                 style: TextStyle(
                     color: Colors.grey,
                     fontSize: 15.0,
                     fontWeight: FontWeight.bold),
               ),
-              const Text(
-                '2022-23',
-                style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
+              Text(
+                InitialData.globalCurrentBatch,
+                style: const TextStyle(
+                    fontSize: 15.0, fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -79,60 +115,7 @@ class SubjectWiseDetails extends StatelessWidget {
               buildRow(
                   children: ['Course', 'Total', 'Present', 'Attendance'],
                   isHeader: true),
-              buildRow(children: [
-                '18CS61 - System Software and Compilers',
-                '11',
-                '7',
-                '63.77%'
-              ], isHeader: false),
-              buildRow(children: [
-                '18CS62 - Computer Graphics and Visualization',
-                '13',
-                '7',
-                '63.77%'
-              ], isHeader: false),
-              buildRow(children: [
-                '18CS63 - Web Technology and its Applications',
-                '13',
-                '7',
-                '63.77%'
-              ], isHeader: false),
-              buildRow(children: [
-                '18CS643 - Cloud Computing and its Applications',
-                '13',
-                '7',
-                '63.77%'
-              ], isHeader: false),
-              buildRow(children: [
-                '18IM652 - Data Analytics and Economics',
-                '13',
-                '7',
-                '63.77%'
-              ], isHeader: false),
-              buildRow(children: [
-                '18CSL67 - Computer Graphics Laboratory with Mini Project',
-                '13',
-                '7',
-                '63.77%'
-              ], isHeader: false),
-              buildRow(children: [
-                '18CSL66 - System Software Laboratory',
-                '13',
-                '7',
-                '63.77%'
-              ], isHeader: false),
-              buildRow(children: [
-                '18CSMP68 - Mobile Application Development',
-                '13',
-                '7',
-                '63.77%'
-              ], isHeader: false),
-              buildRow(children: [
-                '18CSMP69 - Web Technology Laboratory',
-                '13',
-                '7',
-                '63.77%'
-              ], isHeader: false),
+              ...tableContent()
             ],
           )
         ],

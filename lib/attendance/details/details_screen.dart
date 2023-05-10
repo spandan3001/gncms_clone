@@ -18,7 +18,7 @@ class _DetailsScreenState extends State<DetailsScreen>
 
   @override
   void initState() {
-    _tabController = TabController(length: 5, vsync: this, initialIndex: 0);
+    _tabController = TabController(length: 2, vsync: this, initialIndex: 0);
     super.initState();
   }
 

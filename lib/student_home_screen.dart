@@ -8,6 +8,7 @@ import 'package:gncms_clone/custom_widgets/small_card.dart';
 import 'package:flutter/material.dart';
 import 'package:gncms_clone/time_table/time_table_screen.dart';
 import 'package:gncms_clone/user_login_in/screens/login_page.dart';
+import 'package:provider/provider.dart';
 
 class StudentHomeScreen extends StatefulWidget {
   const StudentHomeScreen({Key? key}) : super(key: key);
@@ -66,234 +67,237 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
             ),
           ],
         ),
-        body: Stack(
-          children: [
-            ClipPath(
-              clipper: CustomClipPath(),
-              child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: (MediaQuery.of(context).size.height / 4),
-                  color: Colors.black,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "${globalData['firstName']} ${globalData['lastName']}",
-                          style: const TextStyle(
-                              color: Colors.amber, fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          "($globalUserId)",
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12),
-                        ),
-                        SizedBox(
-                          height: 15,
-                          child: Row(
-                            children: [
-                              Text(
-                                globalData['phoneNo'],
-                                style: const TextStyle(
-                                    color: Colors.white, fontSize: 12),
-                              ),
-                              const VerticalDivider(
-                                indent: 1,
-                                endIndent: 1,
-                                color: Colors.grey,
-                                width: 10,
-                                thickness: 1,
-                              ),
-                              Text(
-                                globalData['email'],
-                                style: const TextStyle(
-                                    color: Colors.white, fontSize: 12),
-                              ),
-                            ],
+        body: Consumer<InitialData>(
+          builder: (context, dataClass, child) => Stack(
+            children: [
+              ClipPath(
+                clipper: CustomClipPath(),
+                child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: (MediaQuery.of(context).size.height / 4),
+                    color: Colors.black,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "${InitialData.globalData['firstName']} ${InitialData.globalData['lastName']}",
+                            style: const TextStyle(
+                                color: Colors.amber,
+                                fontWeight: FontWeight.bold),
                           ),
-                        ),
-                        const Divider(
-                          height: 10,
-                          color: Colors.grey,
-                          thickness: 0.7,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: const [
-                                  Text(
-                                    "Branch",
-                                    style: TextStyle(
-                                        color: Colors.grey, fontSize: 12),
-                                  ),
-                                  Text(
-                                    "CS",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: const [
-                                  Text(
-                                    "Sem",
-                                    style: TextStyle(
-                                        color: Colors.grey, fontSize: 12),
-                                  ),
-                                  Text(
-                                    "6",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: const [
-                                  Text(
-                                    "Division",
-                                    style: TextStyle(
-                                        color: Colors.grey, fontSize: 12),
-                                  ),
-                                  Text(
-                                    "CS-6-B-2023 ",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: const [
-                                  Text(
-                                    "Roll NO.",
-                                    style: TextStyle(
-                                        color: Colors.grey, fontSize: 12),
-                                  ),
-                                  Text(
-                                    "66",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: const [
-                                  Text(
-                                    "Batch",
-                                    style: TextStyle(
-                                        color: Colors.grey, fontSize: 12),
-                                  ),
-                                  Text(
-                                    "2",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                            ],
+                          Text(
+                            "(${InitialData.globalUserId})",
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12),
                           ),
-                        ),
-                      ],
-                    ),
-                  )),
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 130),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GridView.count(
-                  crossAxisSpacing: 25,
-                  mainAxisSpacing: 25,
-                  crossAxisCount: 3,
-                  children: [
-                    CardWidget(
-                      icon: Icons.calendar_month,
-                      cardName: 'Academic Calender',
-                      onPressed: () {
-                        Navigator.pushNamed(context, HomeCalendarScreen.id);
-                      },
-                      iconColor: Colors.blue,
-                    ),
-                    CardWidget(
-                      icon: Icons.timelapse,
-                      cardName: 'Timetable',
-                      onPressed: () {
-                        Navigator.pushNamed(context, TimeTableScreen.id);
-                      },
-                      iconColor: Colors.blueAccent,
-                    ),
-                    CardWidget(
-                      icon: Icons.people,
-                      cardName: 'Attendance',
-                      onPressed: () {
-                        Navigator.pushNamed(context, AttendanceScreen.id);
-                      },
-                      iconColor: Colors.deepPurple,
-                    ),
-                    CardWidget(
-                      icon: Icons.book,
-                      cardName: 'LMS',
-                      onPressed: () {},
-                      iconColor: Colors.red,
-                    ),
-                    CardWidget(
-                      icon: Icons.padding_sharp,
-                      cardName: 'Internal Assessment',
-                      onPressed: () {},
-                      iconColor: Colors.red,
-                    ),
-                    CardWidget(
-                      icon: Icons.credit_card,
-                      cardName: 'Fees',
-                      onPressed: () {
-                        Navigator.pushNamed(context, FeeScreen.id);
-                      },
-                      iconColor: Colors.green,
-                    ),
-                    CardWidget(
-                      icon: Icons.bus_alert_outlined,
-                      cardName: 'Transport',
-                      onPressed: () {},
-                      iconColor: Colors.orange,
-                    ),
-                    CardWidget(
-                      icon: Icons.notification_important,
-                      cardName: 'Notification',
-                      onPressed: () {},
-                      iconColor: Colors.grey,
-                    ),
-                  ],
+                          SizedBox(
+                            height: 15,
+                            child: Row(
+                              children: [
+                                Text(
+                                  InitialData.globalData['phoneNo'] ?? " ",
+                                  style: const TextStyle(
+                                      color: Colors.white, fontSize: 12),
+                                ),
+                                const VerticalDivider(
+                                  indent: 1,
+                                  endIndent: 1,
+                                  color: Colors.grey,
+                                  width: 10,
+                                  thickness: 1,
+                                ),
+                                Text(
+                                  InitialData.globalData['email'] ?? " ",
+                                  style: const TextStyle(
+                                      color: Colors.white, fontSize: 12),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const Divider(
+                            height: 10,
+                            color: Colors.grey,
+                            thickness: 0.7,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: const [
+                                    Text(
+                                      "Branch",
+                                      style: TextStyle(
+                                          color: Colors.grey, fontSize: 12),
+                                    ),
+                                    Text(
+                                      "CS",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: const [
+                                    Text(
+                                      "Sem",
+                                      style: TextStyle(
+                                          color: Colors.grey, fontSize: 12),
+                                    ),
+                                    Text(
+                                      "6",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: const [
+                                    Text(
+                                      "Division",
+                                      style: TextStyle(
+                                          color: Colors.grey, fontSize: 12),
+                                    ),
+                                    Text(
+                                      "CS-6-B-2023 ",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: const [
+                                    Text(
+                                      "Roll NO.",
+                                      style: TextStyle(
+                                          color: Colors.grey, fontSize: 12),
+                                    ),
+                                    Text(
+                                      "66",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: const [
+                                    Text(
+                                      "Batch",
+                                      style: TextStyle(
+                                          color: Colors.grey, fontSize: 12),
+                                    ),
+                                    Text(
+                                      "2",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    )),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 130),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GridView.count(
+                    crossAxisSpacing: 25,
+                    mainAxisSpacing: 25,
+                    crossAxisCount: 3,
+                    children: [
+                      CardWidget(
+                        icon: Icons.calendar_month,
+                        cardName: 'Academic Calender',
+                        onPressed: () {
+                          Navigator.pushNamed(context, HomeCalendarScreen.id);
+                        },
+                        iconColor: Colors.blue,
+                      ),
+                      CardWidget(
+                        icon: Icons.timelapse,
+                        cardName: 'Timetable',
+                        onPressed: () {
+                          Navigator.pushNamed(context, TimeTableScreen.id);
+                        },
+                        iconColor: Colors.blueAccent,
+                      ),
+                      CardWidget(
+                        icon: Icons.people,
+                        cardName: 'Attendance',
+                        onPressed: () {
+                          Navigator.pushNamed(context, AttendanceScreen.id);
+                        },
+                        iconColor: Colors.deepPurple,
+                      ),
+                      CardWidget(
+                        icon: Icons.book,
+                        cardName: 'LMS',
+                        onPressed: () {},
+                        iconColor: Colors.red,
+                      ),
+                      CardWidget(
+                        icon: Icons.padding_sharp,
+                        cardName: 'Internal Assessment',
+                        onPressed: () {},
+                        iconColor: Colors.red,
+                      ),
+                      CardWidget(
+                        icon: Icons.credit_card,
+                        cardName: 'Fees',
+                        onPressed: () {
+                          Navigator.pushNamed(context, FeeScreen.id);
+                        },
+                        iconColor: Colors.green,
+                      ),
+                      CardWidget(
+                        icon: Icons.bus_alert_outlined,
+                        cardName: 'Transport',
+                        onPressed: () {},
+                        iconColor: Colors.orange,
+                      ),
+                      CardWidget(
+                        icon: Icons.notification_important,
+                        cardName: 'Notification',
+                        onPressed: () {},
+                        iconColor: Colors.grey,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
-  selectedItem(BuildContext context, int item) {
+  selectedItem(BuildContext context, int item) async {
     switch (item) {
       case 0:
         Navigator.pushNamed(context, ProfileCardScreen.id);
@@ -302,9 +306,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
         Navigator.pop(context);
         FirebaseAuth.instance.signOut();
         Navigator.pushNamed(context, LoginScreen.id);
-        globalEmail = "";
-        globalCurrentUser = "";
-        globalUserId = "";
+        await InitialData.initGlobalData();
         break;
     }
   }

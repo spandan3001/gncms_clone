@@ -11,7 +11,7 @@ class CustomTabBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: (MediaQuery.of(context).size.height / 100) * 5,
+      height: (MediaQuery.of(context).size.height / 100) * 4,
       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       decoration: const BoxDecoration(
         color: Color(0xFF02BDEC),
@@ -19,6 +19,7 @@ class CustomTabBar extends StatelessWidget {
             topLeft: Radius.circular(5), topRight: Radius.circular(5)),
       ),
       child: TabBar(
+        isScrollable: true,
         unselectedLabelColor: Colors.white,
         labelColor: Colors.black,
         indicatorWeight: 2,

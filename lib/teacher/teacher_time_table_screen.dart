@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gncms_clone/custom_widgets/tab_bar.dart';
-
+import 'package:gncms_clone/teacher/time_table_card.dart';
 import '../time_table/constants.dart';
 
 class TeacherTimeTableScreen extends StatefulWidget {
@@ -23,14 +23,15 @@ class _TeacherTimeTableScreenState extends State<TeacherTimeTableScreen>
     setState(() {
       time = DateTime.now();
       weekday = time.weekday;
-      weekday = (weekday > 5 && weekday != 0) ? 4 : weekday - 1;
-      date = "hello";
-      tabController = TabController(length: 2, vsync: this, initialIndex: 0);
+      weekday = weekday - 1;
+      date = kDays[weekday];
+      tabController.animateTo(weekday);
     });
   }
 
   @override
   void initState() {
+    tabController = TabController(length: 8, vsync: this, initialIndex: 0);
     checkDate();
     super.initState();
   }
@@ -45,74 +46,111 @@ class _TeacherTimeTableScreenState extends State<TeacherTimeTableScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Colors.black,
-          title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text("Time Table"),
-                Text(
-                  'By Spandan',
-                  style: TextStyle(fontSize: 8),
-                )
-              ])),
-      backgroundColor: Colors.white,
-      body: SizedBox(
-        height: MediaQuery.of(context).size.height,
-        child: Column(
-          children: [
-            SizedBox(
-              height: 80,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Text(
-                    'CSE 6B B2',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
+          backgroundColor: Colors.black, title: const Text("Time Table")),
+      backgroundColor: Colors.grey.shade200,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Material(
+              elevation: 2,
+              borderRadius: BorderRadius.circular(5),
+              child: SizedBox(
+                height: 40,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      height: 50,
+                      width: 50,
+                      child: InkWell(
+                        onTap: () {},
+                        child: const Icon(Icons.chevron_left),
+                      ),
                     ),
-                    onPressed: () {
-                      checkDate();
-                    },
-                    child: SizedBox(
-                      height: 30,
-                      width: 150,
-                      child: Center(
-                        child: Text(
-                          "Today : $date",
-                          style: const TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black),
+                    SizedBox(
+                      height: 50,
+                      child: InkWell(
+                        onTap: () {},
+                        child: const Center(
+                          child: Text(
+                            "(20-11-2022 - 27-11-2022)",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ),
                     ),
-                  )
-                ],
+                    SizedBox(
+                      height: 50,
+                      width: 50,
+                      child: InkWell(
+                        onTap: () {},
+                        child: const Icon(Icons.chevron_right),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-            CustomTabBar(
-              tabController: tabController,
-              tabs: const [
-                Tab(
-                  text: "Subject Wise",
+          ),
+          InkWell(
+            onTap: () {
+              checkDate();
+            },
+            child: Text(
+              "Today : $date",
+              style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
+            ),
+          ),
+          CustomTabBar(
+            tabController: tabController,
+            tabs: const [
+              Tab(
+                text: "Mon",
+              ),
+              Tab(
+                text: "tue",
+              ),
+              Tab(
+                text: "wed",
+              ),
+              Tab(
+                text: "thu",
+              ),
+              Tab(
+                text: "fri",
+              ),
+              Tab(
+                text: "sat",
+              ),
+              Tab(
+                text: "sun",
+              ),
+            ],
+          ),
+          Expanded(
+            child: TabBarView(controller: tabController, children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    TimeTableCard(
+                      time: kTime[0],
+                      typeText: 'Lecture',
+                      subject: kSubjects['61']!['subject']!,
+                      teacherName: kSubjects['61']!['teacher']!,
+                    )
+                  ],
                 ),
-                Tab(
-                  text: "Day Wise",
-                )
-              ],
-            ),
-            Expanded(
-              child: TabBarView(controller: tabController, children: const [
-                Text("Hello"),
-                Text("Hello"),
-              ]),
-            ),
-          ],
-        ),
+              )
+            ]),
+          ),
+        ],
       ),
     );
   }
