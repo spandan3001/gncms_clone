@@ -249,8 +249,21 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                       CardWidget(
                         icon: Icons.people,
                         cardName: 'Attendance',
-                        onPressed: () {
-                          Navigator.pushNamed(context, AttendanceScreen.id);
+                        onPressed: () async {
+                          showDialog(
+                            useRootNavigator: false,
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (context) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            },
+                          );
+                          NavigatorState state = Navigator.of(context);
+                          await globalObj.getAttendance();
+
+                          state.pop();
+                          state.pushNamed(AttendanceScreen.id);
                         },
                         iconColor: Colors.deepPurple,
                       ),

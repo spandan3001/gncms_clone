@@ -32,7 +32,7 @@ class SubjectWiseDetails extends StatelessWidget {
                 child: Text(
                   '${attendance.toString()}%',
                   style: TextStyle(
-                      color: attendance < 85 ? Colors.red : Colors.green,
+                      color: attendance < 75 ? Colors.red : Colors.green,
                       fontSize: 12,
                       fontWeight: FontWeight.bold),
                 ),

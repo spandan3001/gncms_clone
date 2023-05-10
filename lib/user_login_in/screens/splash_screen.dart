@@ -16,12 +16,8 @@ class SplashScreen extends StatefulWidget {
 
 class SplashScreenState extends State<SplashScreen> {
   bool _isVisible = false;
-  void initData() async {
-    await globalObj.getUser();
-  }
-
   SplashScreenState() {
-    initData();
+    globalObj.getUser();
     Timer(const Duration(seconds: 2), () {
       setState(() {
         Navigator.of(context, rootNavigator: true)

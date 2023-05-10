@@ -71,7 +71,6 @@ class InitialData extends ChangeNotifier {
       globalEmail = data['email'];
       await getUserDetails();
       await getSubject();
-      await getAttendance();
     }
   }
 
