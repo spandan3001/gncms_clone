@@ -6,7 +6,10 @@ class SubjectWiseDetails extends StatelessWidget {
 
   static const id = '/attendance/details/subject_wise';
 
-  TableRow buildRow({required List<String> children, attendance, isHeader}) =>
+  TableRow buildRow(
+          {required List<String> children,
+          double attendance = 0.0,
+          isHeader}) =>
       TableRow(
         decoration: isHeader
             ? const BoxDecoration(color: Colors.black12)
@@ -45,16 +48,20 @@ class SubjectWiseDetails extends StatelessWidget {
     Map<String, dynamic> subjects =
         InitialData.globalCurrentSubjects[InitialData.globalCurrentSem];
     List<String> temp;
-    InitialData.globalUserAttendance[InitialData.globalCurrentSem]
+    InitialData.globalUserAttendance[InitialData.globalCurrentSem]['subject']
         .forEach((key, value) {
       temp = [];
-      if (key != 'batch' && key != 'totalPercentage') {
-        temp.add(subjects[key]);
-        temp.add(value['details']['total'].toString());
-        temp.add(value['details']['present'].toString());
-        children.add(buildRow(
-            children: temp, attendance: value['percentage'], isHeader: false));
-      }
+
+      temp.add(subjects[key]);
+      temp.add(value['total'].toString());
+      temp.add(value['present'].toString());
+      children.add(buildRow(
+          children: temp,
+          attendance: value['total'] != 0
+              ? double.parse(((value['present'] / value['total']) * 100)
+                  .toStringAsFixed(2))
+              : 0.0,
+          isHeader: false));
     });
     return children;
   }
@@ -112,8 +119,9 @@ class SubjectWiseDetails extends StatelessWidget {
             },
             children: [
               buildRow(
-                  children: ['Course', 'Total', 'Present', 'Attendance'],
-                  isHeader: true),
+                children: ['Course', 'Total', 'Present', 'Attendance'],
+                isHeader: true,
+              ),
               ...tableContent()
             ],
           )

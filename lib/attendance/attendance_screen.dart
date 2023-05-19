@@ -23,7 +23,10 @@ class AttendanceScreen extends StatelessWidget {
 
   List<AttendanceCard> generateAttendanceCard() {
     var attendanceCards = InitialData.globalUserAttendance.keys.map((sem) =>
-        AttendanceCard(sem: sem, batch: getBatch(sem), totalPercentage: 100.0));
+        AttendanceCard(
+            sem: sem,
+            batch: getBatch(sem),
+            totalPercentage: InitialData.globalUserAllTotalPercentage[sem]!));
     return attendanceCards.toList();
   }
 

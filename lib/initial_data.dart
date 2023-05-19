@@ -16,8 +16,12 @@ class InitialData extends ChangeNotifier {
   }
 
   static Map<String, dynamic> globalData = {};
+  static Map<String, double> globalUserAllTotalPercentage = {};
+  static Map<String, dynamic> globalUserBatchDetails = {};
   static Map<String, dynamic> globalCurrentSubjects = {};
   static Map<String, dynamic> globalUserAttendance = {};
+  static Table globalDayTableData = Table();
+  static Table globalDayTableHeader = Table();
   static String globalCurrentUser = "";
   static String globalUserId = "";
   static String globalEmail = "";
@@ -27,7 +31,11 @@ class InitialData extends ChangeNotifier {
   static String _currentUser = "";
 
   static Future<void> initGlobalData() async {
+    globalDayTableHeader = Table();
+    globalDayTableData = Table();
     globalData = {};
+    globalUserBatchDetails = {};
+    globalUserAllTotalPercentage = {};
     globalCurrentSubjects = {};
     globalUserAttendance = {};
     globalCurrentUser = "";
@@ -78,19 +86,18 @@ class InitialData extends ChangeNotifier {
     final snap =
         await database.collection('subject').doc(globalUserBranch).get();
     globalCurrentSubjects = snap.data()!;
-    print(globalCurrentSubjects);
   }
 
   Future<void> getAttendance() async {
     final snap =
         await database.collection('attendance').doc(globalUserBranch).get();
-    print(globalCurrentBatch);
+    globalUserBatchDetails = snap.data()![globalCurrentBatch]['details'];
     globalUserAttendance =
         snap.data()![globalCurrentBatch]['student'][globalUserId];
     List<MapEntry<String, dynamic>> listData =
         globalUserAttendance.entries.toList();
 
-    listData.sort((a, b) => a.key.compareTo(b.key));
+    listData.sort((a, b) => b.key.compareTo(a.key));
 
     globalUserAttendance = Map.fromEntries(listData);
     //print(globalUserAttendance);

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gncms_clone/attendance/details/day_wise_table.dart';
 
+import '../attendance/details/details_screen.dart';
 import '../initial_data.dart';
 
 class AttendanceCard extends StatelessWidget {
@@ -22,10 +24,21 @@ class AttendanceCard extends StatelessWidget {
         type: MaterialType.card,
         child: InkWell(
           onTap: () {
-            Navigator.pushNamed(context, '/attendance/details');
             InitialData.globalCurrentSem = sem;
-            InitialData.globalCurrentBatch = batch;
-            evaluateAttendance();
+            showDialog(
+              useRootNavigator: false,
+              barrierDismissible: false,
+              context: context,
+              builder: (context) {
+                return const Center(child: CircularProgressIndicator());
+              },
+            );
+            InitialData.globalDayTableData = DayWiseTable.tableData();
+            InitialData.globalDayTableHeader = DayWiseTable.tableHeader();
+
+            NavigatorState state = Navigator.of(context);
+            state.pop();
+            state.pushNamed(DetailsScreen.id);
           },
           child: SizedBox(
             height: 60,
@@ -107,7 +120,8 @@ class AttendanceCard extends StatelessWidget {
                       ),
                       Text(
                         '${totalPercentage.toString()}%',
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.bold),
                       )
                     ],
                   ),
@@ -118,12 +132,5 @@ class AttendanceCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  void evaluateAttendance() {
-    Map<String, dynamic> tempData =
-        InitialData.globalUserAttendance[InitialData.globalCurrentSem];
-
-    print(tempData);
   }
 }

@@ -261,7 +261,8 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                           );
                           NavigatorState state = Navigator.of(context);
                           await globalObj.getAttendance();
-
+                          InitialData.globalUserAllTotalPercentage =
+                              evaluateAttendance();
                           state.pop();
                           state.pushNamed(AttendanceScreen.id);
                         },
@@ -322,6 +323,28 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
         await InitialData.initGlobalData();
         break;
     }
+  }
+
+  Map<String, double> evaluateAttendance() {
+    Map<String, double> semTotalAttendance = {};
+    double totalPercentage;
+    int subjectCount;
+
+    InitialData.globalUserAttendance.forEach((sem, dSValue) {
+      totalPercentage = 0;
+      subjectCount = 0;
+      dSValue['subject'].forEach((key, value) {
+        subjectCount++;
+        totalPercentage += value['total'] != 0
+            ? (value['present'] / value['total']) * 100
+            : 0.0;
+      });
+      semTotalAttendance[sem] = subjectCount != 0
+          ? double.parse((totalPercentage / subjectCount).toStringAsFixed(2))
+          : 0;
+    });
+
+    return semTotalAttendance;
   }
 }
 
