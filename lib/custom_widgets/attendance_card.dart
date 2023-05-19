@@ -25,19 +25,9 @@ class AttendanceCard extends StatelessWidget {
         child: InkWell(
           onTap: () {
             InitialData.globalCurrentSem = sem;
-            showDialog(
-              useRootNavigator: false,
-              barrierDismissible: false,
-              context: context,
-              builder: (context) {
-                return const Center(child: CircularProgressIndicator());
-              },
-            );
             InitialData.globalDayTableData = DayWiseTable.tableData();
             InitialData.globalDayTableHeader = DayWiseTable.tableHeader();
-
             NavigatorState state = Navigator.of(context);
-            state.pop();
             state.pushNamed(DetailsScreen.id);
           },
           child: SizedBox(

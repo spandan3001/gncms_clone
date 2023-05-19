@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:gncms_clone/initial_data.dart';
 
-class DayWiseDetails extends StatelessWidget {
+class DayWiseDetails extends StatefulWidget {
   const DayWiseDetails({Key? key}) : super(key: key);
 
   static const id = '/attendance/details/day_wise';
 
   @override
+  State<DayWiseDetails> createState() => _DayWiseDetailsState();
+}
+
+class _DayWiseDetailsState extends State<DayWiseDetails>
+    with AutomaticKeepAliveClientMixin {
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(10),
@@ -32,4 +39,8 @@ class DayWiseDetails extends StatelessWidget {
       ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }
