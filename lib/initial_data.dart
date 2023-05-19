@@ -84,7 +84,9 @@ class InitialData extends ChangeNotifier {
   Future<void> getAttendance() async {
     final snap =
         await database.collection('attendance').doc(globalUserBranch).get();
-    globalUserAttendance = snap.data()![globalUserId];
+    print(globalCurrentBatch);
+    globalUserAttendance =
+        snap.data()![globalCurrentBatch]['student'][globalUserId];
     List<MapEntry<String, dynamic>> listData =
         globalUserAttendance.entries.toList();
 
@@ -120,6 +122,7 @@ class InitialData extends ChangeNotifier {
 
   Future<void> getStudent(DocumentSnapshot<Map<String, dynamic>> snapshot,
       String semNotation, String sectionNotation) async {
+    globalCurrentBatch = snapshot.data()![semNotation]['batch'];
     globalData = snapshot.data()![semNotation][sectionNotation][globalUserId];
   }
 

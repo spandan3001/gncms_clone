@@ -6,7 +6,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FirebaseFirestore database = FirebaseFirestore.instance;
-  var snap = database.collection('subject').doc('CS');
+  var snap = database.collection('attendance').doc('CS');
   //Map<String, dynamic> data = snap.data()!['1MV20CS136'];
 
   //List<MapEntry<String, dynamic>> listData = data.entries.toList();
@@ -16,58 +16,269 @@ void main() async {
   //data = Map.fromEntries(listData);
   //print(data.keys);
 
-  var json = {
-    '1MV20CS136': {
-      'sem-6': {
-        'batch': '2022-23',
-        'totalPercentage': 26.7,
-        '18CS61': {'total': 22, 'present': 14, 'percentage': 63.63},
-        '18CS62': {'total': 21, 'present': 11, 'percentage': 52.38},
-        '18CS63': {'total': 17, 'present': 12, 'percentage': 70.58},
-        '18CS643': {'total': 14, 'present': 13, 'percentage': 70.58},
-        '18CSL66': {'total': 3, 'present': 3, 'percentage': 70.58},
-        '18CSL67': {'total': 7, 'present': 6, 'percentage': 70.58},
-        '18IM652': {'total': 20, 'present': 20, 'percentage': 100},
+  // var x = {
+  //   "attendance": {
+  //     "CS": {
+  //       "sem-6": {
+  //         "section-B": {
+  //           "18CS62": {
+  //             "timeStamp": DateTime(2023, 5, 1, 9),
+  //             "studentPresent": [
+  //               "1MV20CS134",
+  //               "1MV20CS135",
+  //               "1MV20CS136",
+  //               "1MV20CS137"
+  //             ]
+  //           },
+  //           "18CS63": {
+  //             "timeStamp": DateTime(2023, 5, 1, 9, 50),
+  //             "studentPresent": [
+  //               "1MV20CS134",
+  //               "1MV20CS135",
+  //               "1MV20CS136",
+  //               "1MV20CS137"
+  //             ]
+  //           },
+  //           "18CS643": {
+  //             "timeStamp": DateTime(2023, 5, 1, 11),
+  //             "studentPresent": [
+  //               "1MV20CS134",
+  //               "1MV20CS135",
+  //               "1MV20CS136",
+  //               "1MV20CS137"
+  //             ]
+  //           },
+  //           "18IM652": {
+  //             "timeStamp": DateTime(2023, 5, 1, 11, 55),
+  //             "studentPresent": [
+  //               "1MV20CS134",
+  //               "1MV20CS135",
+  //               "1MV20CS136",
+  //               "1MV20CS137"
+  //             ]
+  //           },
+  //           "18CSL67": {
+  //             "timeStamp": DateTime(2023, 5, 1, 1, 35),
+  //             "studentPresent": [
+  //               "1MV20CS134",
+  //               "1MV20CS135",
+  //               "1MV20CS136",
+  //               "1MV20CS137"
+  //             ]
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
+  // };
+
+  var attendance = {
+    '2020-24': {
+      'details': {
+        'sem-1': {
+          'start': DateTime(2020, 12, 27),
+          'end': DateTime(2021, 4, 27)
+        },
+        'sem-2': {
+          'start': DateTime(2021, 4, 27),
+          'end': DateTime(2021, 12, 27)
+        },
+        'sem-3': {
+          'start': DateTime(2021, 12, 31),
+          'end': DateTime(2021, 12, 27)
+        },
+        'sem-4': {
+          'start': DateTime(2021, 12, 31),
+          'end': DateTime(2021, 12, 27)
+        },
+        'sem-5': {
+          'start': DateTime(2021, 12, 31),
+          'end': DateTime(2022, 12, 27)
+        },
+        'sem-6': {'start': DateTime(2022, 3, 11), 'end': DateTime(2023, 10, 27)}
       },
-      'sem-5': {
-        'batch': '2022-23',
-        'totalPercentage': 56.7,
-        '18CS51': {'total': 21, 'present': 11, 'percentage': 52.38},
-        '18CS52': {'total': 17, 'present': 12, 'percentage': 70.58},
-        '18CS53': {'total': 22, 'present': 14, 'percentage': 63.63},
-        '18CS54': {'total': 21, 'present': 11, 'percentage': 52.38},
-        '18CS55': {'total': 21, 'present': 11, 'percentage': 52.38},
-        '18CS56': {'total': 22, 'present': 14, 'percentage': 63.63},
-        '18CSL57': {'total': 22, 'present': 14, 'percentage': 63.63},
-        '18CSL68': {'total': 14, 'present': 13, 'percentage': 70.58},
-        '18CIV59': {'total': 22, 'present': 14, 'percentage': 63.63},
-      },
-      'sem-4': {
-        'batch': '2021-22',
-        'totalPercentage': 86.7,
-        '18MAT41': {'total': 22, 'present': 14, 'percentage': 63.63},
-        '18CS42': {'total': 22, 'present': 14, 'percentage': 63.63},
-        '18CS43': {'total': 22, 'present': 14, 'percentage': 63.63},
-        '18CS44': {'total': 22, 'present': 14, 'percentage': 63.63},
-        '18CS45': {'total': 21, 'present': 11, 'percentage': 52.38},
-        '18CS46': {'total': 22, 'present': 14, 'percentage': 63.63},
-        '18CSL47': {'total': 21, 'present': 11, 'percentage': 52.38},
-        '18CSL48': {'total': 22, 'present': 14, 'percentage': 63.63},
-        '18KVK49': {'total': 21, 'present': 11, 'percentage': 52.38},
-      },
-      'sem-3': {
-        'batch': '2021-22',
-        'totalPercentage': 96.7,
-        '18MAT31': {'total': 21, 'present': 11, 'percentage': 52.38},
-        '18CS32': {'total': 22, 'present': 14, 'percentage': 63.63},
-        '18CS33': {'total': 21, 'present': 11, 'percentage': 52.38},
-        '18CS34': {'total': 22, 'present': 14, 'percentage': 63.63},
-        '18CS35': {'total': 22, 'present': 14, 'percentage': 63.63},
-        '18CS36': {'total': 22, 'present': 14, 'percentage': 63.63},
-        '18CSL37': {'total': 22, 'present': 14, 'percentage': 63.63},
-        '18CSL38': {'total': 22, 'present': 14, 'percentage': 63.63},
-        '18CPC39': {'total': 21, 'present': 11, 'percentage': 52.38},
-      },
+      'student': {
+        '1MV20CS136': {
+          'sem-6': {
+            '18CS61': {
+              'total': 0,
+              'present': 0,
+              'details': [0, "0"],
+            },
+            '18CS62': {
+              'total': 0,
+              'present': 0,
+              'details': [0, "0"],
+            },
+            '18CS63': {
+              'total': 0,
+              'present': 0,
+              'details': [0, "0"],
+            },
+            '18CS643': {
+              'total': 0,
+              'present': 0,
+              'details': [0, "0"],
+            },
+            '18CSL66': {
+              'total': 0,
+              'present': 0,
+              'details': [0, "0"],
+            },
+            '18CSL67': {
+              'total': 0,
+              'present': 0,
+              'details': [0, "0"],
+            },
+            '18IM652': {
+              'total': 0,
+              'present': 0,
+              'details': [0, "0"],
+            },
+          },
+          'sem-5': {
+            '18CS51': {
+              'total': 0,
+              'present': 0,
+              'details': [0, "0"],
+            },
+            '18CS52': {
+              'total': 0,
+              'present': 0,
+              'details': [0, "0"],
+            },
+            '18CS53': {
+              'total': 0,
+              'present': 0,
+              'details': [0, "0"],
+            },
+            '18CS54': {
+              'total': 0,
+              'present': 0,
+              'details': [0, "0"],
+            },
+            '18CS55': {
+              'total': 0,
+              'present': 0,
+              'details': [0, "0"],
+            },
+            '18CS56': {
+              'total': 0,
+              'present': 0,
+              'details': [0, "0"],
+            },
+            '18CSL57': {
+              'total': 0,
+              'present': 0,
+              'details': [0, "0"],
+            },
+            '18CSL68': {
+              'total': 0,
+              'present': 0,
+              'details': [0, "0"],
+            },
+            '18CIV59': {
+              'total': 0,
+              'present': 0,
+              'details': [0, "0"],
+            },
+          },
+          'sem-4': {
+            '18MAT41': {
+              'total': 0,
+              'present': 0,
+              'details': [0, "0"],
+            },
+            '18CS42': {
+              'total': 0,
+              'present': 0,
+              'details': [0, "0"],
+            },
+            '18CS43': {
+              'total': 0,
+              'present': 0,
+              'details': [0, "0"],
+            },
+            '18CS44': {
+              'total': 0,
+              'present': 0,
+              'details': [0, "0"],
+            },
+            '18CS45': {
+              'total': 0,
+              'present': 0,
+              'details': [0, "0"],
+            },
+            '18CS46': {
+              'total': 0,
+              'present': 0,
+              'details': [0, "0"],
+            },
+            '18CSL47': {
+              'total': 0,
+              'present': 0,
+              'details': [0, "0"],
+            },
+            '18CSL48': {
+              'total': 0,
+              'present': 0,
+              'details': [0, "0"],
+            },
+            '18KVK49': {
+              'total': 0,
+              'present': 0,
+              'details': [0, "0"],
+            },
+          },
+          'sem-3': {
+            '18MAT31': {
+              'total': 0,
+              'present': 0,
+              'details': [0, "0"],
+            },
+            '18CS32': {
+              'total': 0,
+              'present': 0,
+              'details': [0, "0"],
+            },
+            '18CS33': {
+              'total': 0,
+              'present': 0,
+              'details': [0, "0"],
+            },
+            '18CS34': {
+              'total': 0,
+              'present': 0,
+              'details': [0, "0"],
+            },
+            '18CS35': {
+              'total': 0,
+              'present': 0,
+              'details': [0, "0"],
+            },
+            '18CS36': {
+              'total': 0,
+              'present': 0,
+              'details': [0, "0"],
+            },
+            '18CSL37': {
+              'total': 0,
+              'present': 0,
+              'details': [0, "0"],
+            },
+            '18CSL38': {
+              'total': 0,
+              'present': 0,
+              'details': [0, "0"],
+            },
+            '18CPC39': {
+              'total': 0,
+              'present': 0,
+              'details': [0, "0"],
+            },
+          },
+        }
+      }
     }
   };
 
@@ -133,5 +344,5 @@ void main() async {
     },
   };
 
-  snap.set(obj, SetOptions(merge: true));
+  snap.set(attendance, SetOptions(merge: true));
 }

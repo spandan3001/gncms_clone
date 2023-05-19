@@ -25,6 +25,7 @@ class AttendanceCard extends StatelessWidget {
             Navigator.pushNamed(context, '/attendance/details');
             InitialData.globalCurrentSem = sem;
             InitialData.globalCurrentBatch = batch;
+            evaluateAttendance();
           },
           child: SizedBox(
             height: 60,
@@ -117,5 +118,12 @@ class AttendanceCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void evaluateAttendance() {
+    Map<String, dynamic> tempData =
+        InitialData.globalUserAttendance[InitialData.globalCurrentSem];
+
+    print(tempData);
   }
 }

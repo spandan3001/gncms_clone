@@ -45,14 +45,13 @@ class SubjectWiseDetails extends StatelessWidget {
     Map<String, dynamic> subjects =
         InitialData.globalCurrentSubjects[InitialData.globalCurrentSem];
     List<String> temp;
-    print(subjects);
     InitialData.globalUserAttendance[InitialData.globalCurrentSem]
         .forEach((key, value) {
       temp = [];
       if (key != 'batch' && key != 'totalPercentage') {
         temp.add(subjects[key]);
-        temp.add(value['total'].toString());
-        temp.add(value['present'].toString());
+        temp.add(value['details']['total'].toString());
+        temp.add(value['details']['present'].toString());
         children.add(buildRow(
             children: temp, attendance: value['percentage'], isHeader: false));
       }

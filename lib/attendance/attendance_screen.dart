@@ -7,13 +7,23 @@ class AttendanceScreen extends StatelessWidget {
   const AttendanceScreen({Key? key}) : super(key: key);
   static const id = '/attendanceScreen';
 
+  String getBatch(String sem) {
+    int semInt = int.parse(sem[sem.length - 1]);
+    int batchInt = int.parse(InitialData.globalCurrentBatch.substring(0, 4));
+    if (semInt <= 2) {
+      return "$batchInt-${batchInt + 1}";
+    } else if (semInt <= 4) {
+      return "${batchInt + 1}-${batchInt + 2}";
+    } else if (semInt <= 6) {
+      return "${batchInt + 2}-${batchInt + 3}";
+    } else {
+      return "${batchInt + 3}-${batchInt + 4}";
+    }
+  }
+
   List<AttendanceCard> generateAttendanceCard() {
-    var attendanceCards = InitialData.globalUserAttendance.keys.map((key) =>
-        AttendanceCard(
-            sem: key,
-            batch: InitialData.globalUserAttendance[key]['batch'],
-            totalPercentage: InitialData.globalUserAttendance[key]
-                ['totalPercentage']));
+    var attendanceCards = InitialData.globalUserAttendance.keys.map((sem) =>
+        AttendanceCard(sem: sem, batch: getBatch(sem), totalPercentage: 100.0));
     return attendanceCards.toList();
   }
 
