@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 
 class CustomTabBar extends StatelessWidget {
   const CustomTabBar(
-      {Key? key, required this.tabController, required this.tabs})
+      {Key? key,
+      required this.tabController,
+      required this.tabs,
+      required this.onTap})
       : super(key: key);
 
   final TabController tabController;
   final List<Tab> tabs;
+  final Function(int) onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +23,7 @@ class CustomTabBar extends StatelessWidget {
             topLeft: Radius.circular(5), topRight: Radius.circular(5)),
       ),
       child: TabBar(
+        onTap: onTap,
         isScrollable: true,
         unselectedLabelColor: Colors.white,
         labelColor: Colors.black,

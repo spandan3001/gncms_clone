@@ -5,18 +5,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../initial_data.dart';
 
 class DayWiseTable {
-  static TableRow buildRow({required List<String> children, date, isHeader}) {
+  static TableRow buildRow(
+      {required List<String> children, required DateTime date, isHeader}) {
     List<Widget> newTableChildren = [
       Center(
         child: Column(
           children: [
             Text(
-              date[0],
+              !isHeader
+                  ? "${date.day}-${DateFormat('MMMM').format(date).substring(0, 3)}"
+                  : 'Date',
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             if (!isHeader)
               Text(
-                date[1],
+                DateFormat('EEEE').format(date).substring(0, 3),
                 style: const TextStyle(color: Colors.grey),
               )
           ],
@@ -35,7 +38,10 @@ class DayWiseTable {
                         fontWeight: FontWeight.bold, fontSize: 12),
                   )
                 : TextDetailButton(
+                    dateTime: date,
                     text: element,
+                    subject: ' ',
+                    presentAbsentPending: 'present',
                   ),
           ),
         ),
@@ -56,11 +62,11 @@ class DayWiseTable {
         DateTime.fromMillisecondsSinceEpoch(timestampStart.seconds * 1000);
     DateTime end =
         DateTime.fromMillisecondsSinceEpoch(timestampEnd.seconds * 1000);
-    while (start.isBefore(end)) {
-      children.add(buildRow(date: [
-        "${start.day}-${DateFormat('MMMM').format(start).substring(0, 3)}",
-        DateFormat('EEEE').format(start).substring(0, 3)
-      ], children: cells(), isHeader: false));
+    int i = 0;
+    while (start.isBefore(end) && i <= 20) {
+      i++;
+      children
+          .add(buildRow(date: start, children: cells(start), isHeader: false));
       start = start.add(const Duration(days: 1));
     }
     return children;
@@ -75,8 +81,23 @@ class DayWiseTable {
     return slots;
   }
 
-  static List<String> cells() {
+  static List<TableRow> tableContentTest() {
+    List<TableRow> children = [];
+    int i = 0;
+    while (i <= 20) {
+      i++;
+      children.add(buildRow(
+          date: DateTime.now(),
+          children: cells(DateTime.now()),
+          isHeader: false));
+    }
+    return children;
+  }
+
+  static List<String> cells(DateTime currentDate) {
     List<String> cell = [];
+    InitialData.globalUserAttendance[InitialData.globalCurrentSem]['subject'];
+    InitialData.globalCurrentSubjects;
 
     for (var i = 0; i < 9; i++) {
       if (i % 2 == 0) {
@@ -90,36 +111,18 @@ class DayWiseTable {
 
   static Table tableData() {
     return Table(
-      border: TableBorder.all(),
+      border: TableBorder.all(width: 0.1),
       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
       columnWidths: const {
         0: FractionColumnWidth(0.2),
       },
       children: [
         buildRow(
-          date: 'Date',
+          date: DateTime.now(),
           children: slots(),
           isHeader: true,
         ),
-        ...tableContent()
-      ],
-    );
-  }
-
-  static Table tableHeader() {
-    return Table(
-      border: TableBorder.all(),
-      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-      columnWidths: const {
-        0: FractionColumnWidth(0.2),
-      },
-      children: [
-        buildRow(
-          date: 'Date',
-          children: slots(),
-          isHeader: true,
-        ),
-        ...tableContent()
+        ...tableContentTest()
       ],
     );
   }

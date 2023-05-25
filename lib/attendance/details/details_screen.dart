@@ -38,6 +38,7 @@ class _DetailsScreenState extends State<DetailsScreen>
       body: Column(
         children: [
           CustomTabBar(
+            onTap: (value) async {},
             tabController: _tabController,
             tabs: const [
               Tab(

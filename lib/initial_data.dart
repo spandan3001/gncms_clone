@@ -21,7 +21,6 @@ class InitialData extends ChangeNotifier {
   static Map<String, dynamic> globalCurrentSubjects = {};
   static Map<String, dynamic> globalUserAttendance = {};
   static Table globalDayTableData = Table();
-  static Table globalDayTableHeader = Table();
   static String globalCurrentUser = "";
   static String globalUserId = "";
   static String globalEmail = "";
@@ -31,7 +30,6 @@ class InitialData extends ChangeNotifier {
   static String _currentUser = "";
 
   static Future<void> initGlobalData() async {
-    globalDayTableHeader = Table();
     globalDayTableData = Table();
     globalData = {};
     globalUserBatchDetails = {};

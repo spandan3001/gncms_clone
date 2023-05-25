@@ -6,7 +6,87 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FirebaseFirestore database = FirebaseFirestore.instance;
-  var snap = database.collection('attendance').doc('CS');
+  var snap = database.collection('timeTable').doc('CS');
+
+  var timeTable = {
+    'sem-6': {
+      'section-B': {
+        'monday': {
+          'slot-1': {'time': '9:00-9:55', 'subject': '18CS61'},
+          'slot-2': {'time': '9:55-10:50', 'subject': '18CS63'},
+          'slot-3': {'time': '11:00-11:55', 'subject': '18CS643'},
+          'slot-4': {'time': '11:55-12:55', 'subject': '18IM652'},
+          'slot-5': {
+            'time': '1:35-4:20',
+            'subject': '18CSL67',
+          },
+        },
+        'tuesday': {
+          'slot-1': {'time': '9:00-9:55', 'subject': '18CS62'},
+          'slot-2': {'time': '9:55-10:50', 'subject': '18CS61'},
+          'slot-3': {'time': '11:00-11:55', 'subject': '18CS63'},
+          'slot-4': {'time': '11:55-12:55', 'subject': '18IM652'},
+          'slot-5': {'time': '1:35-4:20', 'subject': '18CSMP69'}
+        },
+        'wednesday': {
+          'slot-1': {'time': '9:00-9:55', 'subject': '18CS62'},
+          'slot-2': {'time': '9:55-10:50', 'subject': '18CS643'},
+          'slot-3': {'time': '11:00-11:55', 'subject': '18CS63'},
+          'slot-4': {'time': '11:55-12:55', 'subject': '18IM652'},
+        },
+        'thursday': {
+          'slot-1': {'time': '9:00-9:55', 'subject': '18CS63'},
+          'slot-2': {'time': '9:55-10:50', 'subject': '18CS643'},
+          'slot-3': {'time': '11:00-11:55', 'subject': '18CS62'},
+          'slot-4': {'time': '11:55-12:55', 'subject': '18IM652'},
+          'slot-5': {'time': '1:35-4:20', 'subject': '18CSL66'}
+        },
+        'friday': {
+          'slot-1': {'time': '9:00-9:55', 'subject': '18CS61'},
+          'slot-2': {'time': '9:55-10:50', 'subject': '18CS61'},
+          'slot-3': {'time': '11:00-11:55', 'subject': '18CS62'},
+          'slot-4': {'time': '1:35-4:20', 'subject': '18CSMP68'}
+        },
+      }
+    }
+  };
+  const Map<String, Map<String, String>> kSubjects = {
+    '61': {
+      'subject': '18CS61 - System Software and Compilers',
+      'teacher': 'Ms. Mayuri.K.P '
+    },
+    '62': {
+      'subject': '18CS62 - Computer Graphics and Visualization',
+      'teacher': 'Pragathi'
+    },
+    '63': {
+      'subject': '18CS63 - Web Technology and its Applications',
+      'teacher': 'Shobha'
+    },
+    '643': {
+      'subject': '18CS643 - Cloud Computing and its Applications',
+      'teacher': 'Srinivas'
+    },
+    '652': {
+      'subject': '18IM652 - Data Analytics and Economics',
+      'teacher': 'Mr. J.K'
+    },
+    'l67': {
+      'subject': '18CSL67 - Computer Graphics Laboratory with Mini Project',
+      'teacher': 'pragathi'
+    },
+    'l66': {
+      'subject': '18CSL66 - System Software Laboratory',
+      'teacher': 'Ms. Mayuri.K.P '
+    },
+    'mp68': {
+      'subject': '18CSMP68 - Mobile Application Development',
+      'teacher': 'Mrs. Kavya G.M.'
+    },
+    'web': {'subject': '18CSMP69 - Web Development', 'teacher': 'Shobha'},
+    '0': {'subject': 'No Class', 'teacher': ' '}
+  };
+
   //Map<String, dynamic> data = snap.data()!['1MV20CS136'];
 
   //List<MapEntry<String, dynamic>> listData = data.entries.toList();
@@ -356,6 +436,6 @@ void main() async {
   //   },
   // };
 
-  snap.set(attendance);
+  snap.set(timeTable);
   //SetOptions(merge: true)
 }

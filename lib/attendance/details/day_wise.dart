@@ -12,32 +12,46 @@ class DayWiseDetails extends StatefulWidget {
 
 class _DayWiseDetailsState extends State<DayWiseDetails>
     with AutomaticKeepAliveClientMixin {
+  bool flagForScreenDisplay = false;
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) => executeAfterBuild());
     super.build(context);
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                Text('P = Present,'),
-                Text('A = Absent,'),
-                Text('- = No Lecture/Lab,'),
-                Text('PN = Pending'),
-              ],
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              Text('P = Present,'),
+              Text('A = Absent,'),
+              Text('- = No Lecture/Lab,'),
+              Text('PN = Pending'),
+            ],
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: 100,
+              itemBuilder: (BuildContext context, int index) {
+                return ListTile(
+                  leading: const Icon(Icons.add),
+                  title: Text('Person $index'),
+                );
+              },
             ),
-            const SizedBox(
-              height: 10,
-            ),
-            InitialData.globalDayTableHeader,
-            InitialData.globalDayTableData
-          ],
-        ),
+          ),
+        ],
       ),
     );
+  }
+
+  Future<void> executeAfterBuild() async {
+    flagForScreenDisplay = true;
+    setState(() {});
   }
 
   @override

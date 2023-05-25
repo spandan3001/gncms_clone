@@ -108,6 +108,7 @@ class _TeacherTimeTableScreenState extends State<TeacherTimeTableScreen>
             ),
           ),
           CustomTabBar(
+            onTap: (index) {},
             tabController: tabController,
             tabs: const [
               Tab(

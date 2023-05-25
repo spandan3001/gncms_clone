@@ -26,7 +26,6 @@ class AttendanceCard extends StatelessWidget {
           onTap: () {
             InitialData.globalCurrentSem = sem;
             InitialData.globalDayTableData = DayWiseTable.tableData();
-            InitialData.globalDayTableHeader = DayWiseTable.tableHeader();
             NavigatorState state = Navigator.of(context);
             state.pushNamed(DetailsScreen.id);
           },
