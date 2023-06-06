@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../time_table/constants.dart';
+import '../constants.dart';
 
 class TimeTableCard extends StatelessWidget {
   final String typeText;

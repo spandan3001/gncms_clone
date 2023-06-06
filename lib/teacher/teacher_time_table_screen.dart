@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gncms_clone/custom_widgets/tab_bar.dart';
 import 'package:gncms_clone/teacher/time_table_card.dart';
-import '../time_table/constants.dart';
+import 'package:intl/intl.dart';
+import '../constants.dart';
 
 class TeacherTimeTableScreen extends StatefulWidget {
   const TeacherTimeTableScreen({Key? key}) : super(key: key);
@@ -16,15 +17,15 @@ class _TeacherTimeTableScreenState extends State<TeacherTimeTableScreen>
   late TabController tabController;
 
   String date = 'hello';
-  var time = DateTime.now();
+  var currentDate = DateTime.now();
   var weekday = 0;
 
   void checkDate() {
     setState(() {
-      time = DateTime.now();
-      weekday = time.weekday;
+      currentDate = DateTime.now();
+      weekday = currentDate.weekday;
       weekday = weekday - 1;
-      date = kDays[weekday];
+      date = DateFormat('MMMM').format(currentDate).substring(0, 3);
       tabController.animateTo(weekday);
     });
   }
@@ -139,14 +140,7 @@ class _TeacherTimeTableScreenState extends State<TeacherTimeTableScreen>
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
-                  children: [
-                    TimeTableCard(
-                      time: kTime[0],
-                      typeText: 'Lecture',
-                      subject: kSubjects['61']!['subject']!,
-                      teacherName: kSubjects['61']!['teacher']!,
-                    )
-                  ],
+                  children: [],
                 ),
               )
             ]),

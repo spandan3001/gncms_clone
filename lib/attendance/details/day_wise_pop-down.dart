@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:gncms_clone/time_table/constants.dart';
+import 'package:gncms_clone/constants.dart';
 
 class TextDetailButton extends StatefulWidget {
   const TextDetailButton(
       {Key? key,
-      required this.text,
       required this.dateTime,
       required this.subject,
-      required this.presentAbsentPending})
+      required this.timeSlot,
+      required this.teacherName,
+      required this.slotDetails})
       : super(key: key);
 
-  final String text;
+  final Map<String, dynamic> slotDetails;
   final DateTime dateTime;
   final String subject;
-  final String presentAbsentPending;
+  final String timeSlot;
+  final String teacherName;
 
   @override
   State<TextDetailButton> createState() => _TextDetailButtonState();
@@ -23,13 +25,15 @@ class _TextDetailButtonState extends State<TextDetailButton> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: widget.text == 'A' ? Colors.red.shade50 : Colors.green.shade50,
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      color: widget.slotDetails['color'],
       width: 30,
-      height: 40,
+      height: 30,
       child: TextButton(
         style: ButtonStyle(
           overlayColor: MaterialStateProperty.all(
-              widget.text == 'A' ? Colors.red.shade100 : Colors.green.shade100),
+            widget.slotDetails['backgroundColor'],
+          ),
         ),
         onPressed: () {
           showModalBottomSheet(
@@ -74,9 +78,9 @@ class _TextDetailButtonState extends State<TextDetailButton> {
                               width: 10,
                               color: Colors.black,
                             ),
-                            const Text(
-                              "9:00 AM to 9:55 AM",
-                              style: TextStyle(
+                            Text(
+                              widget.timeSlot,
+                              style: const TextStyle(
                                   fontSize: 15, fontWeight: FontWeight.bold),
                             ),
                             const VerticalDivider(
@@ -114,9 +118,9 @@ class _TextDetailButtonState extends State<TextDetailButton> {
                       const SizedBox(
                         height: 10,
                       ),
-                      const Text(
-                        'Mrs. Pragathi M',
-                        style: TextStyle(
+                      Text(
+                        widget.teacherName,
+                        style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 10,
                             color: Colors.grey),
@@ -127,18 +131,17 @@ class _TextDetailButtonState extends State<TextDetailButton> {
                       Container(
                         height: 30.0,
                         width: 60.0,
-                        color: widget.text == 'A'
-                            ? kLabBackColor
-                            : Colors.green.shade50,
+                        color: widget.slotDetails['color'],
                         child: Center(
                           child: Text(
-                            widget.text == 'A' ? 'Absent' : 'Present',
+                            widget.slotDetails['symbol'] == 'A'
+                                ? 'Absent'
+                                : 'Present',
                             style: TextStyle(
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.bold,
-                                color: widget.text == 'A'
-                                    ? kLabColor
-                                    : Colors.green.shade500),
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.bold,
+                              color: widget.slotDetails['color'],
+                            ),
                           ),
                         ),
                       ),
@@ -149,11 +152,12 @@ class _TextDetailButtonState extends State<TextDetailButton> {
         },
         child: Center(
           child: Text(
-            widget.text,
+            widget.slotDetails['symbol'],
             style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-                color: widget.text == 'A' ? Colors.red : Colors.green),
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: widget.slotDetails['color'],
+            ),
           ),
         ),
       ),

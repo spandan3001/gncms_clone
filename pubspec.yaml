@@ -45,7 +45,9 @@ dependencies:
   firebase_auth: ^4.5.0
   shared_preferences: ^2.1.0
   table_calendar: ^3.0.8
+  flutter_spinkit: ^5.2.0
   provider:
+
 
 dev_dependencies:
   flutter_test:

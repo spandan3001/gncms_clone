@@ -1,32 +1,20 @@
 import 'dart:async';
 
+import 'package:gncms_clone/initial_data.dart';
 import 'package:gncms_clone/time_table/body_page.dart';
 import 'package:gncms_clone/custom_widgets/t_card.dart';
 import 'package:flutter/material.dart';
-import 'constants.dart';
-
-List<Widget> cards = [];
 
 Map<String, String> objSubjectTeacher = {};
 
 String subject = '', teacherName = '';
 
-List<Widget> listOfCards = [];
-
 class ListCreation {
-  final List<List<String>> _timeTable = [
-    ['61', '63', '643', '652', 'l67'],
-    ['62', '61', '63', '652', 'web'],
-    ['62', '643', '63', '652', '0'],
-    ['63', '643', '62', '652', 'l66'],
-    ['61', '61', '62', '0', 'mp68'],
-    ['61', '61', '62', '0', '0'],
-    ['0', '0', '0', '0', '0'],
-  ];
-
   var dayIndex = 5;
   var timeIndexForPeriod = 5;
   var time = DateTime.now();
+  int iTimeIndexForPeriod = 0;
+  int iDayIndex = 0;
 
   void startCountdown() {
     Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -34,20 +22,23 @@ class ListCreation {
     });
   }
 
-  void checkTimeSlot() {
+  bool isInSlot(int hour1, int minute1, int hour2, int minute2) {
     time = DateTime.now();
-    if (time.hour == 9 && (time.minute >= 0 && time.minute <= 55)) {
+    DateTime slot1 = DateTime(time.year, time.month, time.day, hour1, minute1);
+    DateTime slot2 = DateTime(time.year, time.month, time.day, hour2, minute2);
+    return (time.isAfter(slot1) && time.isAfter(slot2));
+  }
+
+  void checkTimeSlot() {
+    if (isInSlot(9, 0, 9, 55)) {
       timeIndexForPeriod = 0;
-    } else if ((time.hour == 9 && (time.minute > 55 && time.minute <= 59)) ||
-        (time.hour == 10 && (time.minute >= 0 && time.minute <= 50))) {
+    } else if (isInSlot(9, 55, 10, 50)) {
       timeIndexForPeriod = 1;
-    } else if ((time.hour == 11) && (time.minute >= 0 && time.minute <= 55)) {
+    } else if (isInSlot(11, 0, 11, 55)) {
       timeIndexForPeriod = 2;
-    } else if ((time.hour == 11 && (time.minute > 55 && time.minute <= 59)) ||
-        (time.hour == 12 && (time.minute >= 0 && time.minute <= 50))) {
+    } else if (isInSlot(11, 55, 12, 55)) {
       timeIndexForPeriod = 3;
-    } else if ((time.hour == 13 && (time.minute >= 35 && time.minute <= 59)) ||
-        (time.hour == 16 && (time.minute >= 0 && time.minute <= 20))) {
+    } else if (isInSlot(1, 35, 4, 20)) {
       timeIndexForPeriod = 4;
     } else {
       timeIndexForPeriod = 5;
@@ -56,33 +47,47 @@ class ListCreation {
     //print(timeIndexForPeriod);
   }
 
-  void createCardWidget() {
+  Map<String, Widget> createCardWidget() {
+    Map<String, Widget> listOfCards = {
+      'monday': const SizedBox(),
+      'tuesday': const SizedBox(),
+      'wednesday': const SizedBox(),
+      'thursday': const SizedBox(),
+      'friday': const SizedBox(),
+      'saturday': const SizedBox(),
+    };
+    List<Widget> cards = [];
+
     dayIndex = DateTime.now().weekday - 1;
-    for (var day in _timeTable) {
+    globalObj.getCurrentTimeTable();
+
+    //print(InitialData.globalCurrentTimeTable);
+    Map<String, dynamic> temp;
+    InitialData.globalCurrentTimeTable.forEach((day, slots) {
+      temp = slots;
+      iDayIndex++;
+      // to sort
+
+      List<MapEntry<String, dynamic>> sortedEntries = temp.entries.toList()
+        ..sort((a, b) => a.key.compareTo(b.key));
+
+      temp = Map.fromEntries(sortedEntries);
       cards = [];
-      for (var i = 0; i < day.length; i++) {
-        objSubjectTeacher = kSubjects[day[i]]!;
-        subject = objSubjectTeacher['subject']!;
-        teacherName = objSubjectTeacher['teacher']!;
-
-        cards.add(
-          TCardWidget(
-              time: kTime[i],
-              typeText: i == 4 ? 'Lab' : 'Lecture',
-              subject: subject,
-              teacherName: teacherName,
-              isActive: i == timeIndexForPeriod &&
-                  _timeTable.indexOf(day) == dayIndex),
-        );
-      }
-
-      listOfCards.add(BodyPage(cardWidget: cards));
-    }
-  }
-
-  List<Widget> getCardWidget() {
-    listOfCards = [];
-    createCardWidget();
+      iTimeIndexForPeriod = 0;
+      temp.forEach((slot, value) {
+        iTimeIndexForPeriod++;
+        cards.add(TCardWidget(
+            time: value['time'],
+            typeText: 'Lecture',
+            subject: value['subject'],
+            teacherName: value['teacher'],
+            isActive: (timeIndexForPeriod == iTimeIndexForPeriod &&
+                    dayIndex == iDayIndex)
+                ? true
+                : false));
+      });
+      listOfCards[day] = BodyPage(cardWidget: cards);
+    });
     return listOfCards;
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gncms_clone/attendance/details/day_wise_table.dart';
 
 import '../attendance/details/details_screen.dart';
 import '../initial_data.dart';
@@ -23,10 +22,11 @@ class AttendanceCard extends StatelessWidget {
         borderRadius: const BorderRadius.all(Radius.circular(5.0)),
         type: MaterialType.card,
         child: InkWell(
-          onTap: () {
-            InitialData.globalCurrentSem = sem;
-            InitialData.globalDayTableData = DayWiseTable.tableData();
+          onTap: () async {
+            InitialData.globalSelectedSem = sem;
             NavigatorState state = Navigator.of(context);
+            await globalObj.getCurrentTimeTable();
+            await globalObj.getCurrentUserAttendance();
             state.pushNamed(DetailsScreen.id);
           },
           child: SizedBox(

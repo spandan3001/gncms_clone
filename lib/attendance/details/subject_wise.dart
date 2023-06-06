@@ -46,9 +46,9 @@ class SubjectWiseDetails extends StatelessWidget {
   List<TableRow> tableContent() {
     List<TableRow> children = [];
     Map<String, dynamic> subjects =
-        InitialData.globalCurrentSubjects[InitialData.globalCurrentSem];
+        InitialData.globalCurrentSubjects[InitialData.globalSelectedSem];
     List<String> temp;
-    InitialData.globalUserAttendance[InitialData.globalCurrentSem]['subject']
+    InitialData.globalUserAttendance[InitialData.globalSelectedSem]['subject']
         .forEach((key, value) {
       temp = [];
 
@@ -80,7 +80,7 @@ class SubjectWiseDetails extends StatelessWidget {
                 color: Colors.black,
                 child: Center(
                   child: Text(
-                    InitialData.globalCurrentSem,
+                    InitialData.globalSelectedSem,
                     style: const TextStyle(
                       fontSize: 10.0,
                       fontWeight: FontWeight.bold,

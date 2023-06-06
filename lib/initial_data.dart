@@ -18,21 +18,27 @@ class InitialData extends ChangeNotifier {
   static Map<String, dynamic> globalData = {};
   static Map<String, double> globalUserAllTotalPercentage = {};
   static Map<String, dynamic> globalUserBatchDetails = {};
+  static Map<String, dynamic> globalCurrentTimeTable = {};
   static Map<String, dynamic> globalCurrentSubjects = {};
   static Map<String, dynamic> globalUserAttendance = {};
-  static Table globalDayTableData = Table();
   static String globalCurrentUser = "";
+  static Map<String, dynamic> globalSelectedAttendance = {};
+  static String globalUserSem = "";
+  static String globalUserSection = "";
   static String globalUserId = "";
   static String globalEmail = "";
   static String globalUserBranch = "";
-  static String globalCurrentSem = "";
+  static String globalSelectedSem = "";
   static String globalCurrentBatch = "";
   static String _currentUser = "";
 
   static Future<void> initGlobalData() async {
-    globalDayTableData = Table();
     globalData = {};
+    globalUserSem = "";
+    globalSelectedAttendance = {};
+    globalUserSection = "";
     globalUserBatchDetails = {};
+    globalCurrentTimeTable = {};
     globalUserAllTotalPercentage = {};
     globalCurrentSubjects = {};
     globalUserAttendance = {};
@@ -40,7 +46,7 @@ class InitialData extends ChangeNotifier {
     globalUserId = "";
     globalEmail = "";
     globalUserBranch = "";
-    globalCurrentSem = "";
+    globalSelectedSem = "";
     globalCurrentBatch = "";
     await globalObj.writeInitGlobalData();
   }
@@ -60,6 +66,29 @@ class InitialData extends ChangeNotifier {
         jsonEncode({'user': currentUser, 'email': email, 'userId': userId});
     await prefs.setString('currentUser', data);
     //print(data);
+  }
+
+  Future getCurrentUserAttendance() async {
+    var snap =
+        await database.collection('slotAttendance').doc(globalUserBranch).get();
+    globalSelectedAttendance =
+        snap.data()![globalCurrentBatch][globalSelectedSem][globalUserSection];
+
+    //sort
+
+    List<MapEntry<String, dynamic>> listData =
+        globalSelectedAttendance.entries.toList();
+
+    // print(value);
+
+    listData.sort((a, b) => int.parse(a.key).compareTo(int.parse(b.key)));
+    globalSelectedAttendance = Map.fromEntries(listData);
+  }
+
+  Future<void> getCurrentTimeTable() async {
+    var snap =
+        await database.collection('timeTable').doc(globalUserBranch).get();
+    globalCurrentTimeTable = snap.data()![globalUserSem][globalUserSection];
   }
 
   void getLocalData() {
@@ -117,11 +146,11 @@ class InitialData extends ChangeNotifier {
     if (globalCurrentUser == SingingCharacter.teacher.name) {
       getTeacher(snap3);
     } else if (globalCurrentUser == SingingCharacter.student.name) {
-      String semNotation = "sem-${dataUser['sem']}";
-      //globalUserBatch = snap3.data()![semNotation];
+      globalUserSem = "sem-${dataUser['sem']}";
+      //globalUserBatch = snap3.data()![globalUserSem];
       //print(globalUserBatch);
-      String sectionNotation = "section-${dataUser['section']}";
-      await getStudent(snap3, semNotation, sectionNotation);
+      globalUserSection = "section-${dataUser['section']}";
+      await getStudent(snap3, globalUserSem, globalUserSection);
     }
   }
 
