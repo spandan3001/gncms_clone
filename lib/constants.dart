@@ -8,20 +8,21 @@ const kLabBackColor = Color(0x39F80202);
 
 const kLectureColor = Color(0xFF02BDEC);
 const kLectureBackColor = Color(0x3901DEFA);
-Map details = {
-  'absent': {
-    'symbol': 'A',
-    'textColor': Colors.red.shade50,
-    'backgroundColor': Colors.red.shade100
-  },
-  'present': {
-    'symbol': 'P',
-    'textColor': Colors.green.shade50,
-    'backgroundColor': Colors.green.shade100
-  },
-  'pending': {
-    'symbol': 'PN',
-    'textColor': Colors.yellow.shade50,
-    'backgroundColor': Colors.yellow.shade100
-  },
-};
+
+// Map<dynamic, dynamic> details = {
+//   'absent': {
+//     'symbol': 'A',
+//     'textColor': const Color(0xFFFF0000),
+//     'backgroundColor': const Color(0xFFFFC8C8),
+//   },
+//   'present': {
+//     'symbol': 'P',
+//     'textColor': const Color(0xFF00FF00),
+//     'backgroundColor': const Color(0xFFC8FFC8)
+//   },
+//   'pending': {
+//     'symbol': 'PN',
+//     'textColor': const Color(0xFFFFFF00),
+//     'backgroundColor': const Color(0xFFFFFFC8),
+//   },
+// };

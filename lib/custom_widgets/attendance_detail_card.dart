@@ -1,5 +1,4 @@
 import 'package:gncms_clone/constants.dart';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../attendance/details/day_wise_pop-down.dart';
@@ -12,6 +11,7 @@ class AttendanceDayDetailCard extends StatelessWidget {
   final int dayNumber;
   final Map<String, String> currentDaySlotDetails;
   final Map<String, dynamic> currentDayAttendanceDetail;
+
   List generateData() {
     List children = [];
     Map<String, dynamic> subjects =
@@ -34,7 +34,7 @@ class AttendanceDayDetailCard extends StatelessWidget {
             teacherName: value['teacher'],
             dateTime: date,
             //fetched from the constant file
-            slotDetails: details['present'],
+            slotDetailKey: currentDaySlotDetails[value['subject']]!,
             subject: subjects[value['subject']],
           ),
         ],

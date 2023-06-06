@@ -1,5 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:gncms_clone/constants.dart';
+
+Map<String, dynamic> details = {
+  'absent': {
+    'symbol': 'A',
+    'textColor': Colors.red,
+    'backgroundColor': Colors.red.shade200,
+  },
+  'present': {
+    'symbol': 'P',
+    'textColor': Colors.green,
+    'backgroundColor': Colors.lightGreen.shade200
+  },
+  'pending': {
+    'symbol': 'PN',
+    'textColor': Colors.yellow,
+    'backgroundColor': Colors.yellow.shade200,
+  },
+};
 
 class TextDetailButton extends StatefulWidget {
   const TextDetailButton(
@@ -8,10 +25,10 @@ class TextDetailButton extends StatefulWidget {
       required this.subject,
       required this.timeSlot,
       required this.teacherName,
-      required this.slotDetails})
+      required this.slotDetailKey})
       : super(key: key);
 
-  final Map<String, dynamic> slotDetails;
+  final String slotDetailKey;
   final DateTime dateTime;
   final String subject;
   final String timeSlot;
@@ -22,19 +39,18 @@ class TextDetailButton extends StatefulWidget {
 }
 
 class _TextDetailButtonState extends State<TextDetailButton> {
+  dynamic getDetails(String key) {
+    return details[widget.slotDetailKey][key];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      color: widget.slotDetails['color'],
+      color: getDetails('backgroundColor'),
       width: 30,
       height: 30,
       child: TextButton(
-        style: ButtonStyle(
-          overlayColor: MaterialStateProperty.all(
-            widget.slotDetails['backgroundColor'],
-          ),
-        ),
         onPressed: () {
           showModalBottomSheet(
               context: context,
@@ -93,14 +109,14 @@ class _TextDetailButtonState extends State<TextDetailButton> {
                             Container(
                               height: 15.0,
                               width: 40.0,
-                              color: kLectureBackColor,
-                              child: const Center(
+                              color: getDetails('backgroundColor'),
+                              child: Center(
                                 child: Text(
                                   'Lecture',
                                   style: TextStyle(
                                       fontSize: 10.0,
                                       fontWeight: FontWeight.bold,
-                                      color: kLectureColor),
+                                      color: getDetails('textColor')),
                                 ),
                               ),
                             ),
@@ -131,16 +147,14 @@ class _TextDetailButtonState extends State<TextDetailButton> {
                       Container(
                         height: 30.0,
                         width: 60.0,
-                        color: widget.slotDetails['color'],
+                        color: getDetails('backgroundColor'),
                         child: Center(
                           child: Text(
-                            widget.slotDetails['symbol'] == 'A'
-                                ? 'Absent'
-                                : 'Present',
+                            widget.slotDetailKey,
                             style: TextStyle(
                               fontSize: 15.0,
                               fontWeight: FontWeight.bold,
-                              color: widget.slotDetails['color'],
+                              color: getDetails('textColor'),
                             ),
                           ),
                         ),
@@ -152,11 +166,11 @@ class _TextDetailButtonState extends State<TextDetailButton> {
         },
         child: Center(
           child: Text(
-            widget.slotDetails['symbol'],
+            getDetails('symbol'),
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.bold,
-              color: widget.slotDetails['color'],
+              color: getDetails('textColor'),
             ),
           ),
         ),
