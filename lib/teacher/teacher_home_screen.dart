@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gncms_clone/initial_data.dart';
-import 'package:gncms_clone/teacher/add_student.dart';
 import 'package:gncms_clone/teacher/teacher_time_table_screen.dart';
 import '../custom_widgets/profile_card.dart';
 import '../custom_widgets/small_card.dart';
@@ -157,14 +156,6 @@ class TeacherHomeScreen extends StatelessWidget {
                     icon: Icons.notification_important,
                     cardName: 'Notification',
                     onPressed: () {},
-                    iconColor: Colors.grey,
-                  ),
-                  CardWidget(
-                    icon: Icons.add,
-                    cardName: 'Add Student',
-                    onPressed: () {
-                      Navigator.pushNamed(context, AddStudent.id);
-                    },
                     iconColor: Colors.grey,
                   ),
                 ],

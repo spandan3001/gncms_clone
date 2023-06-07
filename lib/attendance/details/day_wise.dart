@@ -47,49 +47,53 @@ class _DayWiseDetailsState extends State<DayWiseDetails> {
     return attendanceOfSlot;
   }
 
-  List<Widget> generateAttendanceDetailsCards() {
-    //init
+  bool nullCheckForGeneration() {
+    return InitialData.globalSelectedAttendance.isNotEmpty;
+  }
 
-    List<Widget> children = [];
-    print('hello');
-    Timestamp timestampStart = InitialData
-            .globalUserBatchDetails[InitialData.globalSelectedSem]['start'],
-        timestampEnd = InitialData
-            .globalUserBatchDetails[InitialData.globalSelectedSem]['end'];
-    DateTime start =
-        DateTime.fromMillisecondsSinceEpoch(timestampStart.seconds * 1000);
-    DateTime end =
-        DateTime.fromMillisecondsSinceEpoch(timestampEnd.seconds * 1000);
-    DateTime current = DateTime.now();
-    int dayNumber = 1;
-    while (start.isBefore(end) && start.isBefore(current)) {
-      String currentDay = DateFormat('EEEE').format(start).toLowerCase();
-      if (InitialData.globalCurrentTimeTable[currentDay] != null) {
-        Map<String, dynamic> currentTimeTable =
-            InitialData.globalCurrentTimeTable[currentDay];
-        if (currentTimeTable.isNotEmpty) {
-          children.add(Padding(
-            padding: const EdgeInsets.all(2),
-            child: AttendanceDayDetailCard(
-              date: start,
-              currentDay: currentDay,
-              currentDayOfTimeTable:
-                  InitialData.globalCurrentTimeTable[currentDay],
-              currentDayAttendanceDetail:
-                  getSelectedAttendance(dayNumber.toString())
-                      ? InitialData
-                          .globalSelectedAttendance[dayNumber.toString()]
-                      : {},
-              dayNumber: dayNumber,
-              currentDaySlotDetails: checkAttendance(dayNumber.toString()),
-            ),
-          ));
-          dayNumber++;
+  List<Widget> generateAttendanceDetailsCards() {
+    if (nullCheckForGeneration()) {
+      List<Widget> children = [];
+      Timestamp timestampStart = InitialData
+              .globalUserBatchDetails[InitialData.globalSelectedSem]['start'],
+          timestampEnd = InitialData
+              .globalUserBatchDetails[InitialData.globalSelectedSem]['end'];
+      DateTime start =
+          DateTime.fromMillisecondsSinceEpoch(timestampStart.seconds * 1000);
+      DateTime end =
+          DateTime.fromMillisecondsSinceEpoch(timestampEnd.seconds * 1000);
+      DateTime current = DateTime.now();
+      int dayNumber = 1;
+      while (start.isBefore(end) && start.isBefore(current)) {
+        String currentDay = DateFormat('EEEE').format(start).toLowerCase();
+        if (InitialData.globalCurrentTimeTable[currentDay] != null) {
+          Map<String, dynamic> currentTimeTable =
+              InitialData.globalCurrentTimeTable[currentDay];
+          if (currentTimeTable.isNotEmpty) {
+            children.add(Padding(
+              padding: const EdgeInsets.all(2),
+              child: AttendanceDayDetailCard(
+                date: start,
+                currentDay: currentDay,
+                currentDayOfTimeTable:
+                    InitialData.globalCurrentTimeTable[currentDay],
+                currentDayAttendanceDetail:
+                    getSelectedAttendance(dayNumber.toString())
+                        ? InitialData
+                            .globalSelectedAttendance[dayNumber.toString()]
+                        : {},
+                dayNumber: dayNumber,
+                currentDaySlotDetails: checkAttendance(dayNumber.toString()),
+              ),
+            ));
+            dayNumber++;
+          }
         }
+        start = start.add(const Duration(days: 1));
       }
-      start = start.add(const Duration(days: 1));
+      return children;
     }
-    return children;
+    return [];
   }
 
   @override
@@ -110,11 +114,33 @@ class _DayWiseDetailsState extends State<DayWiseDetails> {
           const SizedBox(
             height: 10,
           ),
-          Expanded(
-            child: ListView(
-              children: generateAttendanceDetailsCards(),
+
+          //if not null this
+          if (nullCheckForGeneration())
+            Expanded(
+              child: ListView(
+                children: generateAttendanceDetailsCards(),
+              ),
             ),
-          ),
+
+          //if null this
+          if (!nullCheckForGeneration())
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Text(
+                    'NO DATA',
+                    style: TextStyle(
+                        fontStyle: FontStyle.italic,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30,
+                        color: Colors.grey),
+                  )
+                ],
+              ),
+            )
         ],
       ),
     );

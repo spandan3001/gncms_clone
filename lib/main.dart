@@ -65,7 +65,6 @@ class MyApp extends StatelessWidget {
           TeacherHomeScreen.id: (context) => const TeacherHomeScreen(),
           TeacherTimeTableScreen.id: (context) =>
               const TeacherTimeTableScreen(),
-          AddStudent.id: (context) => AddStudent(),
           HomeCalendarScreen.id: (context) => const HomeCalendarScreen(),
           TableComplexExample.id: (context) => const TableComplexExample(),
         },

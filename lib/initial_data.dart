@@ -71,9 +71,14 @@ class InitialData extends ChangeNotifier {
   Future getCurrentUserAttendance() async {
     var snap =
         await database.collection('slotAttendance').doc(globalUserBranch).get();
-    globalSelectedAttendance =
-        snap.data()![globalCurrentBatch][globalSelectedSem][globalUserSection];
-
+    if (snap.data()![globalCurrentBatch][globalSelectedSem]
+            [globalUserSection] ==
+        null) {
+      globalSelectedAttendance = {};
+    } else {
+      globalSelectedAttendance = snap.data()![globalCurrentBatch]
+          [globalSelectedSem][globalUserSection];
+    }
     //sort
 
     List<MapEntry<String, dynamic>> listData =
