@@ -6,7 +6,6 @@ import 'package:gncms_clone/attendance/details/details_screen.dart';
 import 'package:gncms_clone/fees/fees_screen.dart';
 import 'package:gncms_clone/custom_widgets/profile_card.dart';
 import 'package:gncms_clone/initial_data.dart';
-import 'package:gncms_clone/teacher/add_student.dart';
 import 'package:gncms_clone/teacher/teacher_home_screen.dart';
 import 'package:gncms_clone/teacher/teacher_time_table_screen.dart';
 import 'package:gncms_clone/time_table/time_table_screen.dart';
