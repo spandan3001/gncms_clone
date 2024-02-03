@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
 import 'package:gncms_clone/academic_calender/calendar_screen.dart';
 import 'package:gncms_clone/attendance/attendance_screen.dart';
 import 'package:gncms_clone/fees/fees_screen.dart';
@@ -7,8 +8,10 @@ import 'package:gncms_clone/custom_widgets/profile_card.dart';
 import 'package:gncms_clone/custom_widgets/small_card.dart';
 import 'package:flutter/material.dart';
 import 'package:gncms_clone/time_table/time_table_screen.dart';
-import 'package:gncms_clone/user_login_in/screens/login_page.dart';
+import 'package:gncms_clone/getX/views/login_screen.dart';
 import 'package:provider/provider.dart';
+
+import 'getX/route/app_routes.dart';
 
 class StudentHomeScreen extends StatefulWidget {
   const StudentHomeScreen({Key? key}) : super(key: key);
@@ -317,9 +320,9 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
         Navigator.pushNamed(context, ProfileCardScreen.id);
         break;
       case 3:
-        Navigator.pop(context);
+        Get.back();
         FirebaseAuth.instance.signOut();
-        Navigator.pushNamed(context, LoginScreen.id);
+        Get.toNamed(AppRoutes.getLoginRoute());
         await InitialData.initGlobalData();
         break;
     }

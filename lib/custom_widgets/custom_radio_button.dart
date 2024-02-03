@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gncms_clone/initial_data.dart';
 
+import '../constants.dart';
+
 class CustomRadioButton extends StatelessWidget {
   const CustomRadioButton(
       {Key? key,
@@ -10,10 +12,10 @@ class CustomRadioButton extends StatelessWidget {
       required this.onChanged})
       : super(key: key);
 
-  final SingingCharacter? character;
-  final SingingCharacter value;
+  final UserType? character;
+  final UserType value;
   final String title;
-  final Function(SingingCharacter?) onChanged;
+  final Function(UserType?) onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,8 @@ class CustomRadioButton extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: RadioListTile(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           tileColor: Colors.blue.shade50,
           contentPadding: const EdgeInsets.all(0),
           title: Text(title),

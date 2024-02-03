@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum SingingCharacter { teacher, student }
+import 'constants.dart';
 
 InitialData globalObj = InitialData();
 
@@ -148,9 +148,9 @@ class InitialData extends ChangeNotifier {
         .doc(globalUserBranch)
         .get();
 
-    if (globalCurrentUser == SingingCharacter.teacher.name) {
+    if (globalCurrentUser == UserType.teacher.name) {
       getTeacher(snap3);
-    } else if (globalCurrentUser == SingingCharacter.student.name) {
+    } else if (globalCurrentUser == UserType.student.name) {
       globalUserSem = "sem-${dataUser['sem']}";
       //globalUserBatch = snap3.data()![globalUserSem];
       //print(globalUserBatch);

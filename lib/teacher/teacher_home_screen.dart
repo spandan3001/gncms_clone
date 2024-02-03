@@ -1,11 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:gncms_clone/initial_data.dart';
 import 'package:gncms_clone/teacher/teacher_time_table_screen.dart';
 import '../custom_widgets/profile_card.dart';
 import '../custom_widgets/small_card.dart';
+import '../getX/route/app_routes.dart';
 import '../student_home_screen.dart';
-import '../user_login_in/screens/login_page.dart';
+import '../getX/views/login_screen.dart';
 
 class TeacherHomeScreen extends StatelessWidget {
   const TeacherHomeScreen({Key? key}) : super(key: key);
@@ -184,16 +186,16 @@ class TeacherHomeScreen extends StatelessWidget {
     );
   }
 
-  selectedItem(BuildContext context, int item) {
+  selectedItem(BuildContext context, int item) async {
     switch (item) {
       case 0:
         Navigator.pushNamed(context, ProfileCardScreen.id);
         break;
       case 3:
-        Navigator.pop(context);
+        Get.back();
         FirebaseAuth.instance.signOut();
-        Navigator.pushNamed(context, LoginScreen.id);
-        InitialData.initGlobalData();
+        Get.toNamed(AppRoutes.getLoginRoute());
+        await InitialData.initGlobalData();
         break;
     }
   }

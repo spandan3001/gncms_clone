@@ -9,6 +9,8 @@ const kLabBackColor = Color(0x39F80202);
 const kLectureColor = Color(0xFF02BDEC);
 const kLectureBackColor = Color(0x3901DEFA);
 
+enum UserType { student, teacher, none }
+
 // Map<dynamic, dynamic> details = {
 //   'absent': {
 //     'symbol': 'A',

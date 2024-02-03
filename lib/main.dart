@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:gncms_clone/academic_calender/calendar_screen.dart';
 import 'package:gncms_clone/academic_calender/complex_calendar.dart';
 
 import 'package:gncms_clone/attendance/details/details_screen.dart';
 import 'package:gncms_clone/fees/fees_screen.dart';
 import 'package:gncms_clone/custom_widgets/profile_card.dart';
+import 'package:gncms_clone/getX/route/app_routes.dart';
 import 'package:gncms_clone/initial_data.dart';
 import 'package:gncms_clone/teacher/teacher_home_screen.dart';
 import 'package:gncms_clone/teacher/teacher_time_table_screen.dart';
@@ -12,8 +14,11 @@ import 'package:gncms_clone/time_table/time_table_screen.dart';
 import 'package:gncms_clone/user_login_in/screen_decider.dart';
 import 'package:gncms_clone/user_login_in/screens/forgot_password_page.dart';
 import 'package:gncms_clone/user_login_in/screens/forgot_password_verification_page.dart';
-import 'package:gncms_clone/user_login_in/screens/login_page.dart';
-import 'package:gncms_clone/user_login_in/screens/splash_screen.dart';
+import 'package:gncms_clone/getX/views/login_screen.dart';
+import 'package:gncms_clone/getX/views/splash_screen.dart';
+import 'getX/data/binding/app_binding.dart';
+import 'getX/utils/helpers/snackbar_helper.dart';
+import 'getX/values/app_theme.dart';
 import 'student_home_screen.dart';
 import 'attendance/attendance_screen.dart';
 import 'attendance/details/subject_wise.dart';
@@ -24,6 +29,7 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
   runApp(const MyApp());
 }
 
@@ -39,13 +45,14 @@ class MyApp extends StatelessWidget {
           create: (context) => InitialData(),
         )
       ],
-      child: MaterialApp(
+      child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'GNCMS',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        initialRoute: SplashScreen.id,
+        initialBinding: HomeBinding(),
+        scaffoldMessengerKey: SnackbarHelper.key,
+        theme: AppTheme.themeData,
+        initialRoute: AppRoutes.getSplashRoute(),
+        getPages: AppRoutes.pages,
         routes: {
           StudentHomeScreen.id: (context) => const StudentHomeScreen(),
           TimeTableScreen.id: (context) => const TimeTableScreen(),
@@ -57,7 +64,6 @@ class MyApp extends StatelessWidget {
           DetailsScreen.id: (context) => const DetailsScreen(),
           ForgotPasswordVerificationScreen.id: (context) =>
               const ForgotPasswordVerificationScreen(),
-          LoginScreen.id: (context) => const LoginScreen(),
           ForgotPasswordScreen.id: (context) => const ForgotPasswordScreen(),
           SplashScreen.id: (context) => const SplashScreen(),
           ScreenDecider.id: (context) => const ScreenDecider(),

@@ -7,7 +7,7 @@ void main() async {
   await Firebase.initializeApp();
 
   FirebaseFirestore database = FirebaseFirestore.instance;
-  var globalSnap = database.collection('slotAttendance').doc('CS');
+  var globalSnap = database.collection('students');
 
   var timeTable = {
     'sem-6': {
@@ -372,6 +372,22 @@ void main() async {
     }
   };
 
+  var user = {
+    "email": "soumya@gmail.com",
+    "fatherEmail": "nagaraj@gmail.com",
+    "fatherName": "Nagaraj M A",
+    "fatherPhoneNo": "8548936685",
+    "firstName": "Soumya",
+    "guardianEmail": "arun@gmail.com",
+    "guardianName": "Arun",
+    "guardianPhoneNo": "9739259923",
+    "lastName": "Gadad",
+    "motherEmail": "shobha@gmail.com",
+    "motherName": "Shobha H P",
+    "motherPhoneNo": "9663446570",
+    "phoneNo": "7204460288"
+  };
+
   // var obj = {
   //   'sem-3': {
   //     '18MAT31': 'Transform Calculus, Fourier Series And Numerical Techniques',
@@ -526,10 +542,11 @@ void main() async {
       i++;
     }
     //print(slotAttendance['2020-24']!['sem-6']!['section-B']);
-    globalSnap.set(slotAttendance);
   }
 
   fillSlotData();
+
+  globalSnap.add(user);
 
   //snap.set(slotAttendance);
   //SetOptions(merge: true)
