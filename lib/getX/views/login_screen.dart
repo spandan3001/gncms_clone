@@ -55,31 +55,33 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CustomRadioButton(
-                        character: loginController.currentSelectUserType,
-                        title: UserType.teacher.name,
-                        value: UserType.teacher,
-                        onChanged: (UserType? value) {
-                          setState(() {
-                            loginController.currentSelectUserType = value!;
-                          });
-                        },
-                      ),
-                      CustomRadioButton(
-                        character: loginController.currentSelectUserType,
-                        title: UserType.student.name,
-                        value: UserType.student,
-                        onChanged: (UserType? value) {
-                          setState(() {
-                            loginController.currentSelectUserType = value!;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
+                  Obx(() => Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          CustomRadioButton(
+                            character:
+                                loginController.currentSelectUserType.value,
+                            title: UserType.teacher.name,
+                            value: UserType.teacher,
+                            onChanged: (UserType? value) {
+                              loginController.currentSelectUserType.value =
+                                  value!;
+                              mainController.currentUser.value = value;
+                            },
+                          ),
+                          CustomRadioButton(
+                            character:
+                                loginController.currentSelectUserType.value,
+                            title: UserType.student.name,
+                            value: UserType.student,
+                            onChanged: (UserType? value) {
+                              loginController.currentSelectUserType.value =
+                                  value!;
+                              mainController.currentUser.value = value;
+                            },
+                          ),
+                        ],
+                      )),
                   const SizedBox(height: 20),
                   AppTextFormField(
                     controller: loginController.emailController,
@@ -221,30 +223,4 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-
-  // void onError(FirebaseAuthException e) {
-  //   Navigator.pop(context);
-  //   if (e.code == "unknown") {
-  //     errorMessage = "Nothing is Entered";
-  //   } else if (e.code == "wrong-password") {
-  //     errorMessage = "Wrong password.Try Again";
-  //   } else if (e.code == "user-not-found") {
-  //     errorMessage = "User Not Found";
-  //   } else if (e.code == "too-many-requests") {
-  //     isActive = false;
-  //     startTimerForActivateButton();
-  //   }
-  //   setState(() {});
-  //   isErrorLog = true;
-  //   errorMessage = e.code;
-  // }
-
-  // void startTimerForActivateButton() {
-  //   Timer(const Duration(seconds: 5), () {
-  //     isActive = true;
-  //     setState(() {
-  //       errorMessage = "";
-  //     });
-  //   });
-  // }
 }
