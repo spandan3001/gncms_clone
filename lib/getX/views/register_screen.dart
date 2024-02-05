@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gncms_clone/getX/controllers/main_controller.dart';
 
+import '../../constants.dart';
+import '../../custom_widgets/custom_radio_button.dart';
 import '../controllers/register_controller.dart';
 import '../utils/common_widgets/gradient_background.dart';
 import '../utils/components/app_text_form_field.dart';
-import '../utils/helpers/navigation_helper.dart';
 import '../utils/helpers/snackbar_helper.dart';
 import '../values/app_constants.dart';
 import '../values/app_routes.dart';
@@ -48,6 +49,36 @@ class _RegisterScreenState extends State<RegisterScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
+                  Obx(
+                    () => Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CustomRadioButton(
+                          character:
+                              registerController.currentSelectUserType.value,
+                          title: UserType.teacher.name,
+                          value: UserType.teacher,
+                          onChanged: (UserType? value) {
+                            registerController.currentSelectUserType.value =
+                                value!;
+                            mainController.currentUser.value = value;
+                          },
+                        ),
+                        CustomRadioButton(
+                          character:
+                              registerController.currentSelectUserType.value,
+                          title: UserType.student.name,
+                          value: UserType.student,
+                          onChanged: (UserType? value) {
+                            registerController.currentSelectUserType.value =
+                                value!;
+                            mainController.currentUser.value = value;
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
                   AppTextFormField(
                     autofocus: true,
                     labelText: AppStrings.name,
@@ -189,6 +220,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 registerController.passwordController.clear();
                                 registerController.confirmPasswordController
                                     .clear();
+                                registerController.setUserModel();
                               }
                             : null,
                         child: const Text(AppStrings.register),
@@ -205,9 +237,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 style: AppTheme.bodySmall.copyWith(color: Colors.black),
               ),
               TextButton(
-                onPressed: () => NavigationHelper.pushReplacementNamed(
-                  AppRoutes.login,
-                ),
+                onPressed: () => Get.back(),
                 child: const Text(AppStrings.login),
               ),
             ],
