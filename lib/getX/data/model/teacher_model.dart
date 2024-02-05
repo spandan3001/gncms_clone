@@ -5,9 +5,9 @@
 import 'dart:convert';
 
 class TeacherModel {
-  String? designation;
   String email;
   String firstName;
+  String? designation;
   String? lastName;
   String? phoneNo;
   String userType;
