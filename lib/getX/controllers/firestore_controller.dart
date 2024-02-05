@@ -10,10 +10,12 @@ class FirestoreController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future<DocumentReference<Map<String, dynamic>>?> addStudent(
+  Future<DocumentSnapshot<Map<String, dynamic>>?> addStudent(
       StudentModel studentModel) async {
     try {
-      await _firestore.collection('students').add(studentModel.toJson());
+      DocumentReference<Map<String, dynamic>> snap =
+          await _firestore.collection('students').add(studentModel.toJson());
+      return snap.get();
     } catch (e) {
       // Handle error
       print('Error adding student: $e');
@@ -21,10 +23,12 @@ class FirestoreController extends GetxController {
     return null;
   }
 
-  Future<DocumentReference<Map<String, dynamic>>?> addTeacher(
+  Future<DocumentSnapshot<Map<String, dynamic>>?> addTeacher(
       TeacherModel teacherModel) async {
     try {
-      return await _firestore.collection('teachers').add(teacherModel.toJson());
+      DocumentReference<Map<String, dynamic>> snap =
+          await _firestore.collection('teachers').add(teacherModel.toJson());
+      return snap.get();
     } catch (e) {
       // Handle error
       print('Error adding teacher: $e');
