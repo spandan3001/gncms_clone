@@ -1,17 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:gncms_clone/constants.dart';
-import 'package:gncms_clone/getX/data/model/student_model.dart';
-import 'package:gncms_clone/getX/route/app_routes.dart';
-import 'package:gncms_clone/time_table/list_creation.dart';
-
-import '../controllers/main_controller.dart';
-import '../data/binding/app_binding.dart';
-import '../../initial_data.dart';
-import '../data/model/teacher_model.dart';
-import '../values/app_constants.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -25,31 +14,6 @@ class SplashScreen extends StatefulWidget {
 class SplashScreenState extends State<SplashScreen> {
   bool _isVisible = false;
   SplashScreenState() {
-    HomeBinding().dependencies().whenComplete(() {
-      MainController mainController = Get.find();
-
-      mainController.repository.getCurrentUserModel().then((userModelMap) {
-        if (userModelMap.isEmpty) {
-          Get.toNamed(AppRoutes.getLoginRoute());
-        } else if (userModelMap['userType'] == UserType.student.name) {
-          Get.toNamed(AppRoutes.getStudentHomeRoute());
-          mainController.setUserController(
-              StudentModel.fromJson(userModelMap), UserType.student);
-        } else {
-          Get.toNamed(AppRoutes.getTeacherHomeRoute());
-          mainController.setUserController(
-              TeacherModel.fromJson(userModelMap), UserType.teacher);
-        }
-      });
-    });
-
-    // globalObj.getUser().whenComplete(
-    //   () {
-    //     Navigator.of(context, rootNavigator: true)
-    //         .pushNamedAndRemoveUntil(ScreenDecider.id, (route) => false);
-    //   },
-    // );
-
     Timer(const Duration(milliseconds: 10), () {
       setState(() {
         _isVisible =
