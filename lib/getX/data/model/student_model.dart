@@ -6,33 +6,29 @@ import 'dart:convert';
 
 class StudentModel {
   String email;
-  String? fatherEmail;
-  String fatherName;
-  String? fatherPhoneNo;
+  String userType;
   String firstName;
-  String? guardianEmail;
-  String guardianName;
+  String? fatherName;
+  String? motherName;
+  String? fatherEmail;
+  String? fatherPhoneNo;
   String? guardianPhoneNo;
   String? lastName;
   String? motherEmail;
-  String motherName;
   String? motherPhoneNo;
   String? phoneNo;
-  String userType;
 
   StudentModel({
     required this.email,
     required this.userType,
-    this.fatherEmail,
-    required this.fatherName,
-    this.fatherPhoneNo,
     required this.firstName,
-    this.guardianEmail,
-    required this.guardianName,
+    this.fatherEmail,
+    this.fatherName,
+    this.fatherPhoneNo,
     this.guardianPhoneNo,
     this.lastName,
     this.motherEmail,
-    required this.motherName,
+    this.motherName,
     this.motherPhoneNo,
     this.phoneNo,
   });
@@ -43,8 +39,6 @@ class StudentModel {
         fatherName: json["fatherName"],
         fatherPhoneNo: json["fatherPhoneNo"],
         firstName: json["firstName"],
-        guardianEmail: json["guardianEmail"],
-        guardianName: json["guardianName"],
         guardianPhoneNo: json["guardianPhoneNo"],
         lastName: json["lastName"],
         motherEmail: json["motherEmail"],
@@ -58,15 +52,13 @@ class StudentModel {
     return {
       'email': email,
       'fatherEmail': fatherEmail ?? '',
-      'fatherName': fatherName,
+      'fatherName': fatherName ?? '',
       'fatherPhoneNo': fatherPhoneNo ?? '',
       'firstName': firstName,
-      'guardianEmail': guardianEmail ?? '',
-      'guardianName': guardianName,
       'guardianPhoneNo': guardianPhoneNo ?? '',
       'lastName': lastName ?? '',
       'motherEmail': motherEmail ?? '',
-      'motherName': motherName,
+      'motherName': motherName ?? '',
       'motherPhoneNo': motherPhoneNo ?? '',
       'phoneNo': phoneNo ?? '',
     };
