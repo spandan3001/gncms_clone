@@ -16,6 +16,7 @@ class AppStrings {
   static const String orLoginWith = 'or Login with';
 
   static const String loggedIn = 'Logged In!';
+  static const String notLoggedIn = 'unable to logged In!';
   static const String registrationComplete = 'Registration Complete!';
 
   static const String predict = 'start prediction';

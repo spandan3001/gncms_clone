@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gncms_clone/custom_widgets/tab_bar.dart';
-import 'package:gncms_clone/teacher/time_table_card.dart';
 import 'package:intl/intl.dart';
-import '../constants.dart';
 
 class TeacherTimeTableScreen extends StatefulWidget {
   const TeacherTimeTableScreen({Key? key}) : super(key: key);

@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gncms_clone/student_home_screen.dart';
-import 'package:gncms_clone/teacher/teacher_home_screen.dart';
+import 'package:gncms_clone/getX/views/student_home_screen.dart';
+import 'package:gncms_clone/getX/views/teacher_home_screen.dart';
 import 'package:gncms_clone/getX/views/login_screen.dart';
 
 import '../constants.dart';

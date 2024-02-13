@@ -1,4 +1,3 @@
-import 'package:gncms_clone/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../attendance/details/day_wise_pop-down.dart';
@@ -29,14 +28,14 @@ class AttendanceDayDetailCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(slot),
-          TextDetailButton(
-            timeSlot: value['time'],
-            teacherName: value['teacher'],
-            dateTime: date,
-            //fetched from the constant file
-            slotDetailKey: currentDaySlotDetails[value['subject']]!,
-            subject: subjects[value['subject']],
-          ),
+          // TextDetailButton(
+          //   timeSlot: value['time'],
+          //   teacherName: value['teacher'],
+          //   dateTime: date,
+          //   //fetched from the constant file
+          //   slotDetailKey: currentDaySlotDetails[value['subject']]!,
+          //   subject: subjects[value['subject']],
+          // ),
         ],
       ));
     });
@@ -64,6 +63,7 @@ class AttendanceDayDetailCard extends StatelessWidget {
       type: MaterialType.card,
       child: SizedBox(
           height: 80,
+          width: double.maxFinite,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
             child: Row(
@@ -87,15 +87,18 @@ class AttendanceDayDetailCard extends StatelessWidget {
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 10.0),
                   child: VerticalDivider(
-                    color: Color(0xFFE8E8E8),
+                    color: Colors.black,
                     width: 20.0,
                     thickness: 2,
                   ),
                 ),
                 Expanded(
-                    child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: [...generateData()])),
+                  child: ListView(
+                    physics: const NeverScrollableScrollPhysics(),
+                    scrollDirection: Axis.vertical,
+                    children: [],
+                  ),
+                ),
               ],
             ),
           )),

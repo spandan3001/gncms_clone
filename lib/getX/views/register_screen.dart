@@ -7,9 +7,8 @@ import '../../custom_widgets/custom_radio_button.dart';
 import '../controllers/register_controller.dart';
 import '../utils/common_widgets/gradient_background.dart';
 import '../utils/components/app_text_form_field.dart';
-import '../utils/helpers/snackbar_helper.dart';
+import '../utils/components/custom_drop_down.dart';
 import '../values/app_constants.dart';
-import '../values/app_routes.dart';
 import '../values/app_strings.dart';
 import '../values/app_theme.dart';
 
@@ -33,138 +32,89 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        children: [
-          const GradientBackground(
-            children: [
-              Text(AppStrings.register, style: AppTheme.titleLarge),
-              SizedBox(height: 6),
-              Text(AppStrings.createYourAccount, style: AppTheme.bodySmall),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: Form(
-              key: registerController.getFormKey(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Obx(
-                    () => Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        CustomRadioButton(
-                          character:
-                              registerController.currentSelectUserType.value,
-                          title: UserType.teacher.name,
-                          value: UserType.teacher,
-                          onChanged: (UserType? value) {
-                            registerController.currentSelectUserType.value =
-                                value!;
-                            mainController.currentUser.value = value;
-                          },
-                        ),
-                        CustomRadioButton(
-                          character:
-                              registerController.currentSelectUserType.value,
-                          title: UserType.student.name,
-                          value: UserType.student,
-                          onChanged: (UserType? value) {
-                            registerController.currentSelectUserType.value =
-                                value!;
-                            mainController.currentUser.value = value;
-                          },
-                        ),
-                      ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const GradientBackground(
+              children: [
+                SizedBox(height: 20),
+                Text(AppStrings.register, style: AppTheme.titleLarge),
+                SizedBox(height: 5),
+                Text(AppStrings.createYourAccount, style: AppTheme.bodySmall),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Form(
+                key: registerController.getFormKey(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Obx(
+                      () => Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          CustomRadioButton(
+                            character: mainController.currentUser.value,
+                            title: UserType.teacher.name,
+                            value: UserType.teacher,
+                            onChanged: (UserType? value) {
+                              mainController.currentUser.value = value!;
+                            },
+                          ),
+                          CustomRadioButton(
+                            character: mainController.currentUser.value,
+                            title: UserType.student.name,
+                            value: UserType.student,
+                            onChanged: (UserType? value) {
+                              mainController.currentUser.value = value!;
+                            },
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  AppTextFormField(
-                    autofocus: true,
-                    labelText: AppStrings.name,
-                    keyboardType: TextInputType.name,
-                    textInputAction: TextInputAction.next,
-                    onChanged: (value) => registerController
-                        .getFormKey()
-                        .currentState
-                        ?.validate(),
-                    validator: (value) {
-                      return value!.isEmpty
-                          ? AppStrings.pleaseEnterName
-                          : value.length < 4
-                              ? AppStrings.invalidName
-                              : null;
-                    },
-                    controller: registerController.nameController,
-                  ),
-                  AppTextFormField(
-                    labelText: AppStrings.email,
-                    controller: registerController.emailController,
-                    textInputAction: TextInputAction.next,
-                    keyboardType: TextInputType.emailAddress,
-                    onChanged: (_) => registerController
-                        .getFormKey()
-                        .currentState
-                        ?.validate(),
-                    validator: (value) {
-                      return value!.isEmpty
-                          ? AppStrings.pleaseEnterEmailAddress
-                          : AppConstants.emailRegex.hasMatch(value)
-                              ? null
-                              : AppStrings.invalidEmailAddress;
-                    },
-                  ),
-                  Obx(
-                    () => AppTextFormField(
-                      obscureText: registerController.passwordNotifier.value,
-                      controller: registerController.passwordController,
-                      labelText: AppStrings.password,
+                    const SizedBox(height: 20),
+                    AppTextFormField(
+                      autofocus: true,
+                      labelText: AppStrings.name,
+                      keyboardType: TextInputType.name,
                       textInputAction: TextInputAction.next,
-                      keyboardType: TextInputType.visiblePassword,
+                      onChanged: (value) => registerController
+                          .getFormKey()
+                          .currentState
+                          ?.validate(),
+                      validator: (value) {
+                        return value!.isEmpty
+                            ? AppStrings.pleaseEnterName
+                            : value.length < 4
+                                ? AppStrings.invalidName
+                                : null;
+                      },
+                      controller: registerController.nameController,
+                    ),
+                    AppTextFormField(
+                      labelText: AppStrings.email,
+                      controller: registerController.emailController,
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.emailAddress,
                       onChanged: (_) => registerController
                           .getFormKey()
                           .currentState
                           ?.validate(),
                       validator: (value) {
                         return value!.isEmpty
-                            ? AppStrings.pleaseEnterPassword
-                            : AppConstants.passwordRegex.hasMatch(value)
+                            ? AppStrings.pleaseEnterEmailAddress
+                            : AppConstants.emailRegex.hasMatch(value)
                                 ? null
-                                : AppStrings.invalidPassword;
+                                : AppStrings.invalidEmailAddress;
                       },
-                      suffixIcon: Focus(
-                        /// If false,
-                        ///
-                        /// disable focus for all of this node's descendants
-                        descendantsAreFocusable: false,
-
-                        /// If false,
-                        ///
-                        /// make this widget's descendants un-traversable.
-                        // descendantsAreTraversable: false,
-                        child: IconButton(
-                          onPressed: () =>
-                              registerController.passwordNotifier.value =
-                                  !registerController.passwordNotifier.value,
-                          style: IconButton.styleFrom(
-                            minimumSize: const Size.square(48),
-                          ),
-                          icon: Icon(
-                            registerController.passwordNotifier.value
-                                ? Icons.visibility_off_outlined
-                                : Icons.visibility_outlined,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
                     ),
-                  ),
-                  Obx(() => AppTextFormField(
-                        labelText: AppStrings.confirmPassword,
-                        controller:
-                            registerController.confirmPasswordController,
+                    Obx(
+                      () => AppTextFormField(
                         obscureText: registerController.passwordNotifier.value,
-                        textInputAction: TextInputAction.done,
+                        controller: registerController.passwordController,
+                        labelText: AppStrings.password,
+                        textInputAction: TextInputAction.next,
                         keyboardType: TextInputType.visiblePassword,
                         onChanged: (_) => registerController
                             .getFormKey()
@@ -172,20 +122,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ?.validate(),
                         validator: (value) {
                           return value!.isEmpty
-                              ? AppStrings.pleaseReEnterPassword
+                              ? AppStrings.pleaseEnterPassword
                               : AppConstants.passwordRegex.hasMatch(value)
-                                  ? registerController
-                                              .passwordController.text ==
-                                          registerController
-                                              .confirmPasswordController.text
-                                      ? null
-                                      : AppStrings.passwordNotMatched
+                                  ? null
                                   : AppStrings.invalidPassword;
                         },
                         suffixIcon: Focus(
                           /// If false,
                           ///
-                          /// disable focus for all of this node's descendants.
+                          /// disable focus for all of this node's descendants
                           descendantsAreFocusable: false,
 
                           /// If false,
@@ -193,56 +138,115 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           /// make this widget's descendants un-traversable.
                           // descendantsAreTraversable: false,
                           child: IconButton(
-                            onPressed: () => registerController
-                                    .confirmPasswordNotifier.value =
-                                !registerController
-                                    .confirmPasswordNotifier.value,
+                            onPressed: () =>
+                                registerController.passwordNotifier.value =
+                                    !registerController.passwordNotifier.value,
                             style: IconButton.styleFrom(
                               minimumSize: const Size.square(48),
                             ),
                             icon: Icon(
-                              registerController.confirmPasswordNotifier.value
+                              registerController.passwordNotifier.value
                                   ? Icons.visibility_off_outlined
                                   : Icons.visibility_outlined,
                               color: Colors.black,
                             ),
                           ),
                         ),
-                      )),
-                  Obx(() => FilledButton(
-                        onPressed: registerController.fieldValidNotifier.value
-                            ? () {
-                                SnackbarHelper.showSnackBar(
-                                  AppStrings.registrationComplete,
-                                );
-                                registerController.nameController.clear();
-                                registerController.emailController.clear();
-                                registerController.passwordController.clear();
-                                registerController.confirmPasswordController
-                                    .clear();
-                                registerController.setUserModel();
-                              }
-                            : null,
-                        child: const Text(AppStrings.register),
-                      ))
-                ],
+                      ),
+                    ),
+                    Obx(() => AppTextFormField(
+                          labelText: AppStrings.confirmPassword,
+                          controller:
+                              registerController.confirmPasswordController,
+                          obscureText:
+                              registerController.passwordNotifier.value,
+                          textInputAction: TextInputAction.done,
+                          keyboardType: TextInputType.visiblePassword,
+                          onChanged: (_) => registerController
+                              .getFormKey()
+                              .currentState
+                              ?.validate(),
+                          validator: (value) {
+                            return value!.isEmpty
+                                ? AppStrings.pleaseReEnterPassword
+                                : AppConstants.passwordRegex.hasMatch(value)
+                                    ? registerController
+                                                .passwordController.text ==
+                                            registerController
+                                                .confirmPasswordController.text
+                                        ? null
+                                        : AppStrings.passwordNotMatched
+                                    : AppStrings.invalidPassword;
+                          },
+                          suffixIcon: Focus(
+                            /// If false,
+                            ///
+                            /// disable focus for all of this node's descendants.
+                            descendantsAreFocusable: false,
+
+                            /// If false,
+                            ///
+                            /// make this widget's descendants un-traversable.
+                            // descendantsAreTraversable: false,
+                            child: IconButton(
+                              onPressed: () => registerController
+                                      .confirmPasswordNotifier.value =
+                                  !registerController
+                                      .confirmPasswordNotifier.value,
+                              style: IconButton.styleFrom(
+                                minimumSize: const Size.square(48),
+                              ),
+                              icon: Icon(
+                                registerController.confirmPasswordNotifier.value
+                                    ? Icons.visibility_off_outlined
+                                    : Icons.visibility_outlined,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        )),
+                    CustomDropDown(
+                      controller: registerController.branchController,
+                      items: registerController.createDropdownMenuForBranch(),
+                      hint: '',
+                      label: 'Branch',
+                    ),
+                    const SizedBox(height: 20),
+                    CustomDropDown(
+                      controller: registerController.branchController,
+                      items: registerController.createDropdownMenuForSemester(),
+                      hint: '',
+                      label: 'Semester',
+                    ),
+                    const SizedBox(height: 20),
+                    Obx(() => FilledButton(
+                          onPressed: registerController.fieldValidNotifier.value
+                              ? () async {
+                                  await registerController
+                                      .signUpWithEmailAndPassword();
+                                }
+                              : null,
+                          child: const Text(AppStrings.register),
+                        ))
+                  ],
+                ),
               ),
             ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                AppStrings.iHaveAnAccount,
-                style: AppTheme.bodySmall.copyWith(color: Colors.black),
-              ),
-              TextButton(
-                onPressed: () => Get.back(),
-                child: const Text(AppStrings.login),
-              ),
-            ],
-          ),
-        ],
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  AppStrings.iHaveAnAccount,
+                  style: AppTheme.bodySmall.copyWith(color: Colors.black),
+                ),
+                TextButton(
+                  onPressed: () => Get.back(),
+                  child: const Text(AppStrings.login),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

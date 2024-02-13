@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import 'package:gncms_clone/student_home_screen.dart';
+import 'package:gncms_clone/getX/views/student_home_screen.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/style.dart';
 
@@ -128,14 +128,7 @@ class ForgotPasswordVerificationScreenState
                                       context, "#AAAAAA", "#757575"),
                               child: ElevatedButton(
                                 style: ThemeHelper().buttonStyle(Colors.black),
-                                onPressed: _pinSuccess
-                                    ? () {
-                                        Navigator.pushNamedAndRemoveUntil(
-                                            context,
-                                            StudentHomeScreen.id,
-                                            (route) => false);
-                                      }
-                                    : null,
+                                onPressed: _pinSuccess ? () {} : null,
                                 child: Padding(
                                   padding:
                                       const EdgeInsets.fromLTRB(40, 10, 40, 10),

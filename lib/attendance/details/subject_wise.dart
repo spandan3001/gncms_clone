@@ -1,75 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:gncms_clone/getX/controllers/user_controllers/student_user_controller.dart';
 import 'package:gncms_clone/initial_data.dart';
+
+import '../../getX/data/model/attendance_model.dart';
+import '../../getX/utils/common_widgets/attendance_data_row.dart';
 
 class SubjectWiseDetails extends StatelessWidget {
   const SubjectWiseDetails({Key? key}) : super(key: key);
 
-  static const id = '/attendance/details/subject_wise';
-
-  TableRow buildRow(
-          {required List<String> children,
-          double attendance = 0.0,
-          isHeader}) =>
-      TableRow(
-        decoration: isHeader
-            ? const BoxDecoration(color: Colors.black12)
-            : const BoxDecoration(),
-        children: [
-          ...children
-              .map(
-                (cell) => Padding(
-                  padding: const EdgeInsets.all(5),
-                  child: Text(
-                    cell,
-                    textAlign: TextAlign.start,
-                    style: const TextStyle(
-                        fontSize: 12, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              )
-              .toList(),
-          if (!isHeader)
-            Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: Center(
-                child: Text(
-                  '${attendance.toString()}%',
-                  style: TextStyle(
-                      color: attendance < 75 ? Colors.red : Colors.green,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-        ],
-      );
-  List<TableRow> tableContent() {
-    List<TableRow> children = [];
-    Map<String, dynamic> subjects =
-        InitialData.globalCurrentSubjects[InitialData.globalSelectedSem];
-    List<String> temp;
-    InitialData.globalUserAttendance[InitialData.globalSelectedSem]['subject']
-        .forEach((key, value) {
-      temp = [];
-
-      temp.add(subjects[key]);
-      temp.add(value['total'].toString());
-      temp.add(value['present'].toString());
-      children.add(buildRow(
-          children: temp,
-          attendance: value['total'] != 0
-              ? double.parse(((value['present'] / value['total']) * 100)
-                  .toStringAsFixed(2))
-              : 0.0,
-          isHeader: false));
-    });
-    return children;
-  }
-
   @override
   Widget build(BuildContext context) {
+    final userController = Get.find<StudentController>();
     return Padding(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(20),
       child: Column(
         children: [
           Row(
@@ -80,7 +24,7 @@ class SubjectWiseDetails extends StatelessWidget {
                 color: Colors.black,
                 child: Center(
                   child: Text(
-                    InitialData.globalSelectedSem,
+                    userController.getUser().semester,
                     style: const TextStyle(
                       fontSize: 10.0,
                       fontWeight: FontWeight.bold,
@@ -109,24 +53,34 @@ class SubjectWiseDetails extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          Table(
-            border: TableBorder.all(),
-            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-            columnWidths: const {
-              0: FractionColumnWidth(0.5),
-              1: FractionColumnWidth(0.15),
-              2: FractionColumnWidth(0.15),
-            },
-            children: [
-              buildRow(
-                children: ['Course', 'Total', 'Present', 'Attendance'],
-                isHeader: true,
-              ),
-              ...tableContent()
-            ],
-          )
+          AttendanceTable(attendanceModels: userController.attendanceModels)
         ],
       ),
+    );
+  }
+}
+
+class AttendanceTable extends StatelessWidget {
+  final List<AttendanceSlotModel>? attendanceModels;
+
+  const AttendanceTable({
+    Key? key,
+    required this.attendanceModels,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        if (attendanceModels != null)
+          for (var entry in attendanceModels!)
+            AttendanceDataRow(
+              course: entry.class_,
+              total: entry.absent.length + entry.present.length,
+              present: entry.present.length,
+              subject: entry.subject,
+            ),
+      ],
     );
   }
 }

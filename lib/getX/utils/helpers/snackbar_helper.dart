@@ -1,18 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 
-class SnackbarHelper {
-  const SnackbarHelper._();
+class SnackBarHelper {
+  const SnackBarHelper._();
 
   static final _key = GlobalKey<ScaffoldMessengerState>();
 
   static GlobalKey<ScaffoldMessengerState> get key => _key;
 
-  static void showSnackBar(String? message, {bool isError = false}) =>
+  static void showSnackBar(
+          {String? title, String? message, ContentType? contentType}) =>
       _key.currentState
         ?..removeCurrentSnackBar()
         ..showSnackBar(
           SnackBar(
-            content: Container(color: Colors.white, child: Text(message ?? '')),
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            content: SizedBox(
+              height: 100,
+              child: AwesomeSnackbarContent(
+                title: title ?? "",
+                message: message ?? "",
+                contentType: contentType ?? ContentType.help,
+              ),
+            ),
+            behavior: SnackBarBehavior.floating,
           ),
         );
 }

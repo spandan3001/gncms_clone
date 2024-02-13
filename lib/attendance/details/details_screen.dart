@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:gncms_clone/attendance/details/day_wise.dart';
 import 'package:gncms_clone/attendance/details/subject_wise.dart';
 import 'package:gncms_clone/custom_widgets/tab_bar.dart';
+import 'package:gncms_clone/getX/values/app_colors.dart';
 
 class DetailsScreen extends StatefulWidget {
   const DetailsScreen({Key? key}) : super(key: key);
-
-  static const id = '/attendance/details';
 
   @override
   State<DetailsScreen> createState() => _DetailsScreenState();
@@ -32,13 +32,25 @@ class _DetailsScreenState extends State<DetailsScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Attendance Details"),
-        backgroundColor: Colors.black,
+        leading: IconButton(
+          onPressed: () {
+            Get.back();
+          },
+          icon: const Icon(
+            Icons.keyboard_return,
+            color: Colors.white,
+          ),
+        ),
+        title: const Text(
+          "Attendance Details",
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: AppColors.darkestBlue,
       ),
       body: Column(
         children: [
           CustomTabBar(
-            onTap: (value) async {},
+            onTap: (value) {},
             tabController: _tabController,
             tabs: const [
               Tab(

@@ -25,7 +25,6 @@ class CustomTabBar extends StatelessWidget {
       ),
       child: TabBar(
         onTap: onTap,
-        isScrollable: true,
         unselectedLabelColor: Colors.white,
         labelColor: Colors.black,
         indicatorWeight: 2,

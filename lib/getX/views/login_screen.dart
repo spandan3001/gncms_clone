@@ -1,3 +1,4 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -59,25 +60,19 @@ class _LoginScreenState extends State<LoginScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           CustomRadioButton(
-                            character:
-                                loginController.currentSelectUserType.value,
+                            character: mainController.currentUser.value,
                             title: UserType.teacher.name,
                             value: UserType.teacher,
                             onChanged: (UserType? value) {
-                              loginController.currentSelectUserType.value =
-                                  value!;
-                              mainController.currentUser.value = value;
+                              mainController.currentUser.value = value!;
                             },
                           ),
                           CustomRadioButton(
-                            character:
-                                loginController.currentSelectUserType.value,
+                            character: mainController.currentUser.value,
                             title: UserType.student.name,
                             value: UserType.student,
                             onChanged: (UserType? value) {
-                              loginController.currentSelectUserType.value =
-                                  value!;
-                              mainController.currentUser.value = value;
+                              mainController.currentUser.value = value!;
                             },
                           ),
                         ],
@@ -131,12 +126,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
-                  if (loginController.errorMessage.value.isNotEmpty)
-                    SizedBox(
-                      width: double.infinity,
-                      child:
-                          Obx(() => Text(loginController.errorMessage.value)),
-                    ),
                   TextButton(
                     onPressed: () {},
                     child: const Text(AppStrings.forgotPassword),
@@ -147,13 +136,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed: loginController.fieldValidNotifier.value
                           ? () async {
                               await loginController.signIn();
-                              SnackbarHelper.showSnackBar(
-                                AppStrings.loggedIn,
-                              );
-                              NavigationHelper.pushReplacementNamed(
-                                  AppRoutes.getStudentHomeRoute());
-                              loginController.emailController.clear();
-                              loginController.passwordController.clear();
                             }
                           : null,
                       child: const Text(AppStrings.login),
@@ -180,7 +162,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       Expanded(
                         child: OutlinedButton.icon(
-                          onPressed: () {},
+                          onPressed: () {
+                            SnackBarHelper.showSnackBar(
+                              message: "spandan how are you",
+                            );
+                            print("there is a snack bar");
+                          },
                           icon: SvgPicture.asset(Vectors.google, width: 14),
                           label: const Text(
                             AppStrings.google,
@@ -214,7 +201,11 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(width: 4),
               TextButton(
-                onPressed: () => Get.toNamed(AppRoutes.getRegisterRoute()),
+                //onPressed: () => Get.toNamed(AppRoutes.getRegisterRoute()),
+                onPressed: () => SnackBarHelper.showSnackBar(
+                    title: "Sorry",
+                    message: "Registration is done by administration",
+                    contentType: ContentType.warning),
                 child: const Text(AppStrings.register),
               ),
             ],

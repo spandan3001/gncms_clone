@@ -1,25 +1,36 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:gncms_clone/getX/controllers/main_controller.dart';
-
 import '../../constants.dart';
+import '../data/model/student_model.dart';
+import '../data/model/teacher_model.dart';
+import '../route/app_routes.dart';
+import '../utils/helpers/snackbar_helper.dart';
 import '../values/app_regex.dart';
+import '../values/app_strings.dart';
 
 class LoginController extends GetxController {
   RxBool passwordNotifier = true.obs;
   RxBool fieldValidNotifier = false.obs;
 
   final _formKey1 = GlobalKey<FormState>();
-  Rx<UserType> currentSelectUserType = UserType.student.obs;
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  RxString errorMessage = "".obs;
-
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  GlobalKey<FormState> getFormKey() => _formKey1;
+
+  @override
+  void onInit() {
+    super.onInit();
+    // Add a listener for email and password changes
+    emailController.addListener(controllerListener);
+    passwordController.addListener(controllerListener);
+  }
 
   @override
   void onClose() {
@@ -28,71 +39,108 @@ class LoginController extends GetxController {
     super.onClose();
   }
 
-  GlobalKey<FormState> getFormKey() => _formKey1;
+  void controllerListener() {
+    final email = emailController.text;
+    final password = passwordController.text;
+
+    if (email.isEmpty && password.isEmpty) return;
+
+    if (AppRegex.emailRegex.hasMatch(email) &&
+        AppRegex.passwordRegex.hasMatch(password)) {
+      fieldValidNotifier.value = true;
+    } else {
+      fieldValidNotifier.value = false;
+    }
+  }
 
   Future<User?> signIn() async {
+    final MainController mainController = Get.find<MainController>();
     try {
-      UserCredential userCredential = await _auth
+      await _auth
           .signInWithEmailAndPassword(
         email: emailController.text,
         password: passwordController.text,
       )
-          .whenComplete(
-        () async {
-          await setUserModel();
-        },
-      );
+          .then((value) async {
+        if (value.user != null) {
+          await setUserModel(value.user!.uid);
+          SnackBarHelper.showSnackBar(
+            contentType: ContentType.success,
+            title: "Success",
+            message: AppStrings.loggedIn,
+          );
+          if (mainController.currentUser.value == UserType.student) {
+            Get.offNamed(AppRoutes.getStudentHomeRoute);
+          } else if (mainController.currentUser.value == UserType.teacher) {
+            Get.offNamed(AppRoutes.getTeacherHomeRoute);
+          }
+        } else {
+          SnackBarHelper.showSnackBar(
+            contentType: ContentType.failure,
+            title: "Failed",
+            message: AppStrings.notLoggedIn,
+          );
+        }
+        return value;
+      });
       // Successful sign-in, return the authenticated user
-      return userCredential.user;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        errorMessage.value = 'No user found for that email.';
+        SnackBarHelper.showSnackBar(
+            title: "Error",
+            message: 'No user found for that email.',
+            contentType: ContentType.failure);
       } else if (e.code == 'wrong-password') {
-        errorMessage.value = 'Wrong password provided for that user.';
+        SnackBarHelper.showSnackBar(
+            title: "Error",
+            message: 'Error during sign-in: ${e.message}',
+            contentType: ContentType.failure);
       } else {
-        errorMessage.value = 'Error during sign-in: ${e.message}';
+        SnackBarHelper.showSnackBar(
+            title: "Error",
+            message: 'Error during sign-in: ${e.message}',
+            contentType: ContentType.failure);
       }
-      // Return null in case of failure
-      return null;
     } catch (e) {
-      errorMessage.value = 'Error during sign-in: $e';
-      // Return null in case of failure
-      return null;
+      SnackBarHelper.showSnackBar(
+          title: "Error",
+          message: 'Error during sign-in: $e',
+          contentType: ContentType.failure);
     }
+    return null;
   }
 
-  Future<void> setUserModel() async {
+  Future<void> setUserModel(String userId) async {
     final MainController mainController = Get.find<MainController>();
     try {
       // Get the document from Firestore
-      DocumentSnapshot<Map<String, dynamic>>? doc = await mainController
-          .firestoreController
-          .getDocument(mainController.currentUser.value);
+      DocumentSnapshot<Map<String, dynamic>>? doc;
 
-      // Check if the document exists and contains data
-      if (doc!.exists && doc.data() != null) {
-        // Extract the data from the document
-        Map<String, dynamic> userData = doc.data()!;
+      //get data from firestore
+      if (mainController.currentUser.value == UserType.student) {
+        final model =
+            await mainController.firestoreController.getStudent(userId);
+        // Set the current user model in SharedPreferences
+        await mainController.repository.setCurrentUserModel(model!.toJson());
 
-        // Convert the user data to Map<String, String>
-        Map<String, String> userDataStringMap = {};
-        userData.forEach((key, value) {
-          userDataStringMap[key] = value.toString();
-        });
+        //set user Controller
+        mainController.setUserController(model, UserType.student);
+      } else if (mainController.currentUser.value == UserType.teacher) {
+        final model =
+            await mainController.firestoreController.getTeacher(userId);
 
         // Set the current user model in SharedPreferences
-        await mainController.repository.setCurrentUserModel(userDataStringMap);
+        await mainController.repository.setCurrentUserModel(model!.toJson());
 
-        // Update the current user model in MainController
-        mainController.setUserController(
-            userDataStringMap, mainController.currentUser.value);
-      } else {
-        // Handle case when the document doesn't exist or is empty
-        print('Document not found or empty');
+        //set user Controller
+        mainController.setUserController(model, UserType.teacher);
       }
     } catch (e) {
       // Handle any errors that may occur during the process
-      print('Error setting user model: $e');
+      SnackBarHelper.showSnackBar(
+          title: "Error",
+          message: 'Error setting user model: $e',
+          contentType: ContentType.failure);
     }
   }
 }

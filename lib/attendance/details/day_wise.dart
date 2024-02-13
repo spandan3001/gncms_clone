@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:gncms_clone/custom_widgets/attendance_detail_card.dart';
+import 'package:gncms_clone/getX/controllers/user_controllers/student_user_controller.dart';
 import 'package:gncms_clone/initial_data.dart';
 import 'package:intl/intl.dart';
 
@@ -9,13 +11,12 @@ import '../../helper.dart';
 class DayWiseDetails extends StatefulWidget {
   const DayWiseDetails({Key? key}) : super(key: key);
 
-  static const id = '/attendance/details/day_wise';
-
   @override
   State<DayWiseDetails> createState() => _DayWiseDetailsState();
 }
 
 class _DayWiseDetailsState extends State<DayWiseDetails> {
+  final userController = Get.find<StudentController>();
   bool getSelectedAttendance(dayNumberInString) {
     if (InitialData.globalSelectedAttendance[dayNumberInString] != null) {
       InitialData.globalSelectedAttendance[dayNumberInString];
@@ -102,9 +103,9 @@ class _DayWiseDetailsState extends State<DayWiseDetails> {
       padding: const EdgeInsets.all(10.0),
       child: Column(
         children: [
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
+            children: [
               Text('P = Present,'),
               Text('A = Absent,'),
               Text('- = No Lecture/Lab,'),
@@ -114,22 +115,13 @@ class _DayWiseDetailsState extends State<DayWiseDetails> {
           const SizedBox(
             height: 10,
           ),
-
-          //if not null this
-          if (nullCheckForGeneration())
-            Expanded(
-              child: ListView(
-                children: generateAttendanceDetailsCards(),
-              ),
-            ),
-
           //if null this
-          if (!nullCheckForGeneration())
-            Expanded(
+          if (userController.attendanceModels == null)
+            const Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
+                children: [
                   Text(
                     'NO DATA',
                     style: TextStyle(
@@ -140,7 +132,17 @@ class _DayWiseDetailsState extends State<DayWiseDetails> {
                   )
                 ],
               ),
-            )
+            ),
+          if (userController.attendanceModels != null)
+            for (var entry in userController.attendanceModels!)
+              AttendanceDayDetailCard(
+                date: entry.time.toDate(),
+                dayNumber: 1,
+                currentDay: '',
+                currentDayOfTimeTable: {},
+                currentDayAttendanceDetail: {},
+                currentDaySlotDetails: {},
+              ),
         ],
       ),
     );

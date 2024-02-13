@@ -1,23 +1,32 @@
 import 'package:get/get.dart';
+import 'package:gncms_clone/getX/views/class_list.dart';
+import 'package:gncms_clone/getX/views/mark_attendance_screen.dart';
 import 'package:gncms_clone/getX/views/register_screen.dart';
-import 'package:gncms_clone/teacher/teacher_home_screen.dart';
+import 'package:gncms_clone/getX/views/teacher_home_screen.dart';
 import 'package:gncms_clone/getX/views/login_screen.dart';
 import 'package:gncms_clone/getX/views/splash_screen.dart';
 
-import '../../student_home_screen.dart';
+import '../../attendance/details/details_screen.dart';
+import '../views/student_home_screen.dart';
 
 class AppRoutes {
-  static const _studentHomeScreen = '/home';
-  static const _teacherHomeScreen = '/home';
+  static const _studentHomeScreen = '/studentHome';
+  static const _teacherHomeScreen = '/teacherHome';
   static const _splashScreen = '/';
   static const _loginScreen = '/login';
   static const _registerScreen = '/register';
+  static const _attendanceDetailScreen = '/detail';
+  static const _markAttendanceScreen = '/markAttendance';
+  static const _classListScreen = '/classList';
 
-  static String getStudentHomeRoute() => _studentHomeScreen;
-  static String getTeacherHomeRoute() => _studentHomeScreen;
-  static String getSplashRoute() => _splashScreen;
-  static String getRegisterRoute() => _registerScreen;
-  static String getLoginRoute() => _loginScreen;
+  static String get getStudentHomeRoute => _studentHomeScreen;
+  static String get getTeacherHomeRoute => _teacherHomeScreen;
+  static String get getSplashRoute => _splashScreen;
+  static String get getRegisterRoute => _registerScreen;
+  static String get getLoginRoute => _loginScreen;
+  static String get getAttendanceDetailScreen => _attendanceDetailScreen;
+  static String get getMarkAttendanceScreen => _markAttendanceScreen;
+  static String get getClassListScreen => _classListScreen;
 
   static final List<GetPage> pages = [
     GetPage(name: _studentHomeScreen, page: () => const StudentHomeScreen()),
@@ -25,5 +34,9 @@ class AppRoutes {
     GetPage(name: _loginScreen, page: () => const LoginScreen()),
     GetPage(name: _registerScreen, page: () => const RegisterScreen()),
     GetPage(name: _teacherHomeScreen, page: () => const TeacherHomeScreen()),
+    GetPage(name: _attendanceDetailScreen, page: () => const DetailsScreen()),
+    GetPage(name: _classListScreen, page: () => const ClassListScreen()),
+    GetPage(
+        name: _markAttendanceScreen, page: () => const MarkAttendanceScreen()),
   ];
 }
