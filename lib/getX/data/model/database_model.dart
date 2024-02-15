@@ -10,6 +10,7 @@ class DatabaseModel {
   static const timetableCollection = "Timetable";
   static const dayCollection = "Days";
   static const attendanceCollection = "Attendance";
+  static const studentAttendanceCollection = "Attendance";
 
   Map<String, dynamic> branchIds = {};
   Map<String, dynamic> semesterIds = {};

@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class AttendanceDataRow extends StatelessWidget {
-  final String course;
+  final String class_;
   final String subject;
   final int total;
   final int present;
 
   const AttendanceDataRow({
     Key? key,
-    required this.course,
+    required this.class_,
     required this.subject,
     required this.total,
     required this.present,
@@ -28,7 +29,7 @@ class AttendanceDataRow extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Course: $course',
+                'Course: $class_',
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 4),
@@ -52,8 +53,10 @@ class AttendanceDataRow extends StatelessWidget {
                       value: attendancePercentage,
                       minHeight: 5,
                       backgroundColor: const Color(0xFFEAFAF5),
-                      valueColor: const AlwaysStoppedAnimation<Color>(
-                          Color(0xFF07BD84)),
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          attendancePercentage < 0.75
+                              ? Colors.red
+                              : Colors.green),
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -69,7 +72,7 @@ class AttendanceDataRow extends StatelessWidget {
             ],
           ),
         ),
-      ),
+      ).paddingSymmetric(vertical: 8.0),
     );
   }
 }

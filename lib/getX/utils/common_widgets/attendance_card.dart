@@ -1,19 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gncms_clone/getX/controllers/user_controllers/student/student_user_controller.dart';
+import 'package:gncms_clone/getX/data/model/student_attendance_model.dart';
 import 'package:gncms_clone/getX/route/app_routes.dart';
 
 class AttendanceCard extends StatelessWidget {
-  const AttendanceCard(
-      {Key? key,
-      required this.semester,
-      required this.batch,
-      required this.totalPercentage})
+  const AttendanceCard({Key? key, required this.studentAttendanceModel})
       : super(key: key);
-  final String semester;
-  final String batch;
-  final double totalPercentage;
+  final StudentAttendanceModel studentAttendanceModel;
+
+  double generateTotalPercentage(
+      List<SemesterAttendanceModel> semesterAttendance) {
+    double total = 0.0;
+    double present = 0.0;
+    for (var ele in semesterAttendance) {
+      present += double.parse(ele.present);
+      total += double.parse(ele.present) + double.parse(ele.absent);
+      print("yes");
+    }
+    return total == 0.0 ? 0.0 : present / total;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final totalPercentage = generateTotalPercentage(
+        studentAttendanceModel.listOfSemesterAttendance);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Material(
@@ -22,6 +33,9 @@ class AttendanceCard extends StatelessWidget {
         type: MaterialType.card,
         child: InkWell(
           onTap: () async {
+            final userController = Get.find<StudentController>();
+            userController.attendanceController!
+                .setCurrentStudentAttendanceModel(studentAttendanceModel);
             Get.toNamed(AppRoutes.getAttendanceDetailScreen);
           },
           child: Padding(
@@ -46,7 +60,7 @@ class AttendanceCard extends StatelessWidget {
                                   color: Colors.black,
                                   child: Center(
                                     child: Text(
-                                      semester,
+                                      studentAttendanceModel.semester,
                                       style: const TextStyle(
                                         fontSize: 10.0,
                                         fontWeight: FontWeight.bold,
@@ -65,9 +79,9 @@ class AttendanceCard extends StatelessWidget {
                                       fontSize: 15.0,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                Text(
-                                  batch,
-                                  style: const TextStyle(
+                                const Text(
+                                  '2024',
+                                  style: TextStyle(
                                       fontSize: 15.0,
                                       fontWeight: FontWeight.bold),
                                 ),
@@ -92,18 +106,22 @@ class AttendanceCard extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.only(right: 30),
                         child: LinearProgressIndicator(
-                          value: totalPercentage / 100,
+                          value: totalPercentage,
                           minHeight: 5,
                           backgroundColor: const Color(0xFFEAFAF5),
-                          valueColor:
-                              const AlwaysStoppedAnimation(Color(0xFF07BD84)),
+                          valueColor: AlwaysStoppedAnimation(
+                              totalPercentage < 0.75
+                                  ? Colors.red
+                                  : Colors.green),
                         ),
                       ),
                     ),
                     Text(
-                      '${totalPercentage.toString()}%',
-                      style: const TextStyle(
-                          fontSize: 15, fontWeight: FontWeight.bold),
+                      "${(totalPercentage * 100).toInt()}%",
+                      style: TextStyle(
+                          color: totalPercentage < 0.75
+                              ? Colors.red
+                              : Colors.green),
                     )
                   ],
                 ),

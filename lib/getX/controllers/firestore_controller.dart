@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gncms_clone/getX/data/model/attendance_model.dart';
 import 'package:gncms_clone/getX/data/model/database_model.dart';
+import 'package:gncms_clone/getX/data/model/student_attendance_model.dart';
 import 'package:gncms_clone/getX/data/model/student_model.dart';
 import 'package:gncms_clone/getX/data/model/teacher_model.dart';
 import 'package:gncms_clone/getX/data/model/timetable_model.dart';
@@ -164,80 +165,95 @@ class FirestoreController extends GetxController {
     }
   }
 
-  Future<QuerySnapshot<Map<String, dynamic>>> testGc() async {
-    return await _firestore
-        .collectionGroup("Slots")
-        .where('tdId', isEqualTo: 'w3UYpxjTHyRH1R31zg8gIIHwxz42')
-        .get();
-  }
-
-  Future<List<TimetableModel>> getClassForTeacher({
-    required TeacherModel teacherModel,
-  }) async {
-    final List<TimetableModel> listOfTimetable = [];
+  Future<List<AttendanceModel>> getListOfAttendanceModel(
+      TeacherModel teacherModel) async {
+    final List<AttendanceModel> listOfAttendanceModel = [];
 
     try {
-      final branchTimetables = await _firestore
-          .collection(DatabaseModel.timetableCollection)
+      final branchAttendanceList = await _firestore
+          .collection(DatabaseModel.attendanceCollection)
           .where('branch', isEqualTo: teacherModel.branch)
+          .orderBy('semester')
+          .orderBy('section')
           .get();
-
-      for (final branchTimetable in branchTimetables.docs) {
-        if (branchTimetable.exists && branchTimetable.data().isNotEmpty) {
-          final days = await _firestore
-              .collection(DatabaseModel.timetableCollection)
-              .doc(branchTimetable.id)
-              .collection(DatabaseModel.dayCollection)
-              .get();
-
-          final List<DayModel> listOfDayModel = [];
-          for (final day in days.docs) {
-            if (day.exists && day.data().isNotEmpty) {
-              final slots = await _firestore
-                  .collection(DatabaseModel.timetableCollection)
-                  .doc(branchTimetable.id)
-                  .collection(DatabaseModel.dayCollection)
-                  .doc(day.id)
-                  .collection(DatabaseModel.slotCollection)
-                  .orderBy('time')
-                  .get();
-              final List<SlotModel> listOfSlotModel = [];
-              for (final slot in slots.docs) {
-                if (slot.exists && slot.data().isNotEmpty) {
-                  final slotModel = SlotModel.fromFirestore(slot.data());
-
-                  if (slotModel.tdId == teacherModel.id) {
-                    listOfSlotModel.add(slotModel);
-                  }
-                }
-              }
-              if (listOfSlotModel.isNotEmpty) {
-                listOfDayModel.add(DayModel(
-                  id: day.id,
-                  slots: listOfSlotModel,
-                  time: listOfSlotModel.first.time,
-                ));
-              }
-            }
-          }
-          if (listOfDayModel.isNotEmpty) {
-            final data = branchTimetable.data();
-            listOfTimetable.add(TimetableModel(
-                branch: data['branch'],
-                section: data['section'],
-                semester: data['semester'],
-                days: listOfDayModel));
-          }
+      for (final branchAttendance in branchAttendanceList.docs) {
+        if (branchAttendance.exists && branchAttendance.data().isNotEmpty) {
+          final data = branchAttendance.data();
+          listOfAttendanceModel.add(AttendanceModel.fromJson(data, []));
         }
       }
     } catch (e) {
       SnackBarHelper.showSnackBar(
         title: "Error",
-        message: "Error getting teachers classes: $e",
+        message: "Error getting attendance models: $e",
         contentType: ContentType.failure,
       );
     }
-    return listOfTimetable;
+
+    return listOfAttendanceModel;
+  }
+
+  Future<AttendanceModel> getListOfAttendanceDayModelForAttendanceModel(
+      {required List<AttendanceModel> listOfAttendanceModel,
+      required String semester,
+      required String section,
+      required TeacherModel teacherModel}) async {
+    List<AttendanceDayModel> listOfAttendanceDayModel = [];
+    AttendanceModel attendanceModel = listOfAttendanceModel
+        .where((element) =>
+            element.semester == semester && element.section == section)
+        .first;
+
+    if (attendanceModel.days.isNotEmpty) {
+      return attendanceModel;
+    } else {
+      try {
+        final days = await _firestore
+            .collection(DatabaseModel.attendanceCollection)
+            .doc(attendanceModel.id)
+            .collection(DatabaseModel.dayCollection)
+            .where('time', isLessThanOrEqualTo: DateTime.now())
+            .orderBy('time')
+            .get();
+        for (final day in days.docs) {
+          if (day.exists && day.data().isNotEmpty) {
+            final slots = await _firestore
+                .collection(DatabaseModel.attendanceCollection)
+                .doc(attendanceModel.id)
+                .collection(DatabaseModel.dayCollection)
+                .doc(day.id)
+                .collection(DatabaseModel.slotCollection)
+                .orderBy('time')
+                .get();
+            final List<AttendanceSlotModel> listOfAttendanceSlotModel = [];
+            for (final slot in slots.docs) {
+              if (slot.exists && slot.data().isNotEmpty) {
+                final slotModel = AttendanceSlotModel.fromJson(slot.data());
+
+                if (slotModel.tdId == teacherModel.id && !slotModel.marked) {
+                  listOfAttendanceSlotModel.add(slotModel);
+                }
+              }
+            }
+            if (listOfAttendanceSlotModel.isNotEmpty) {
+              listOfAttendanceDayModel.add(AttendanceDayModel(
+                id: day.id,
+                slots: listOfAttendanceSlotModel,
+                time: listOfAttendanceSlotModel.first.time,
+              ));
+            }
+          }
+        }
+        attendanceModel.days.addAll(listOfAttendanceDayModel);
+      } catch (e) {
+        SnackBarHelper.showSnackBar(
+          title: "Error",
+          message: "Error getting attendance day & slot models: $e",
+          contentType: ContentType.failure,
+        );
+      }
+      return attendanceModel;
+    }
   }
 
   Future<List<DayModel>> getTimetable({
@@ -291,8 +307,6 @@ class FirestoreController extends GetxController {
           }
         }
       }
-      print(timetableModel.length);
-      print("-----------------------------------------");
       return timetableModel;
     } catch (e) {
       SnackBarHelper.showSnackBar(
@@ -304,140 +318,209 @@ class FirestoreController extends GetxController {
     return [];
   }
 
-  Future<List<StudentModel>> getStudentList(
+  Future<(List<StudentModel>, List<String>)> getStudentList(
       {required String branch,
       required String semester,
       required String section}) async {
+    List<StudentModel> students = [];
+    List<String> studentIds = [];
     try {
-      List<StudentModel> students = [];
       final snap = await _firestore
           .collection(DatabaseModel.studentCollection)
           .where('branch', isEqualTo: branch)
           .where('semester', isEqualTo: semester)
           .where('section', isEqualTo: section)
+          .orderBy('usn')
           .get();
       if (snap.docs.isNotEmpty) {
         // Iterate through the documents and convert them to StudentModel
-        students =
-            snap.docs.map((doc) => StudentModel.fromJson(doc.data())).toList();
+        for (var doc in snap.docs) {
+          final studentModel = StudentModel.fromJson(doc.data());
+          students.add(studentModel);
+          studentIds.add(studentModel.id);
+        }
       }
-      return students;
+      return (students, studentIds);
     } catch (e) {
       SnackBarHelper.showSnackBar(
           title: "Error",
           message: "Error getting students list: $e",
           contentType: ContentType.failure);
     }
-    return [];
+    return (students, studentIds);
   }
 
-  Future<void> addTimetable(
-      String timetableId, Map<String, dynamic> data) async {
+  Future<AttendanceModel?> getAttendanceModel(StudentModel studentModel) async {
     try {
-      await _firestore.collection('Timetable').doc(timetableId).set(data);
-    } catch (e) {
-      print("Error adding class: $e");
-    }
-  }
-
-  Future<void> updateTimetableId(
-      String timetableId, Map<String, dynamic> data) async {
-    try {
-      await _firestore.doc(timetableId).update(data);
-    } catch (e) {
-      print("Error updating class: $e");
-    }
-  }
-
-  Future<DocumentSnapshot?> getBranch(String branchId) async {
-    try {
-      return await _firestore.collection('Branches').doc(branchId).get();
-    } catch (e) {
-      print("Error getting branch: $e");
-      return null;
-    }
-  }
-
-  Future<void> addBranch(String branchId, Map<String, dynamic> data) async {
-    try {
-      await _firestore.collection('Branches').doc(branchId).set(data);
-    } catch (e) {
-      print("Error adding branch: $e");
-    }
-  }
-
-  Future<void> updateBranch(String branchId, Map<String, dynamic> data) async {
-    try {
-      await _firestore.collection('Branches').doc(branchId).update(data);
-    } catch (e) {
-      print("Error updating branch: $e");
-    }
-  }
-
-  Future<List<AttendanceSlotModel>?> getAttendance(
-      StudentModel studentModel) async {
-    try {
-      List<AttendanceSlotModel> attendanceList = [];
-
-      //return attendanceList;
-      final data = await _firestore
+      final attendanceModel = await _firestore
           .collection(DatabaseModel.attendanceCollection)
           .where("branch", isEqualTo: studentModel.branch)
           .where("semester", isEqualTo: studentModel.semester)
           .where("section", isEqualTo: studentModel.section)
           .get()
-          .then(
-        (value) {
-          return _firestore
+          .then((value) =>
+              AttendanceModel.fromJson(value.docs.single.data(), []));
+      final days = await _firestore
+          .collection(DatabaseModel.attendanceCollection)
+          .doc(attendanceModel.id)
+          .collection(DatabaseModel.dayCollection)
+          .where('time', isLessThanOrEqualTo: DateTime.now())
+          .orderBy('time')
+          .get();
+      List<AttendanceDayModel> listOfAttendanceDayModel = [];
+      for (final day in days.docs) {
+        if (day.exists && day.data().isNotEmpty) {
+          final slots = await _firestore
               .collection(DatabaseModel.attendanceCollection)
-              .doc(value.docs.single.id)
+              .doc(attendanceModel.id)
               .collection(DatabaseModel.dayCollection)
+              .doc(day.id)
+              .collection(DatabaseModel.slotCollection)
+              .orderBy('time')
               .get();
-        },
-      );
-      for (var element in data.docs) {
-        attendanceList.add(AttendanceSlotModel.fromJson(element.data()));
+          final List<AttendanceSlotModel> listOfAttendanceSlotModel = [];
+          for (final slot in slots.docs) {
+            if (slot.exists && slot.data().isNotEmpty) {
+              final slotModel = AttendanceSlotModel.fromJson(slot.data());
+
+              listOfAttendanceSlotModel.add(slotModel);
+            }
+          }
+          if (listOfAttendanceSlotModel.isNotEmpty) {
+            listOfAttendanceDayModel.add(AttendanceDayModel(
+              id: day.id,
+              slots: listOfAttendanceSlotModel,
+              time: listOfAttendanceSlotModel.first.time,
+            ));
+          }
+        }
       }
-      return attendanceList;
+      attendanceModel.days.addAll(listOfAttendanceDayModel);
+
+      return attendanceModel;
     } catch (e) {
-      print("Error getting attendance: $e");
+      SnackBarHelper.showSnackBar(
+          title: "Error",
+          message: "Error getting attendance model for Student: $e",
+          contentType: ContentType.failure);
     }
     return null;
   }
 
-  Future<void> addAttendance(String branchId, String semesterId,
-      String sectionId, String date, Map<String, dynamic> data) async {
+  Future<bool> addStudentAttendance(StudentModel studentModel,
+      StudentAttendanceModel studentAttendanceModel) async {
     try {
+      final refDoc = await _firestore
+          .collection(DatabaseModel.studentCollection)
+          .doc(studentModel.id)
+          .collection(DatabaseModel.studentAttendanceCollection)
+          .add({'semester': studentModel.semester});
+
       await _firestore
-          .collection('Branches')
-          .doc(branchId)
-          .collection('Semesters')
-          .doc(semesterId)
-          .collection('Sections')
-          .doc(sectionId)
-          .collection('Attendance')
-          .doc(date)
-          .set(data);
+          .collection(DatabaseModel.studentCollection)
+          .doc(studentModel.id)
+          .collection(DatabaseModel.studentAttendanceCollection)
+          .doc(refDoc.id)
+          .update({'id': refDoc.id});
+
+      print(studentAttendanceModel.listOfSemesterAttendance);
+
+      for (var slot in studentAttendanceModel.listOfSemesterAttendance) {
+        final doc = await _firestore
+            .collection(DatabaseModel.studentCollection)
+            .doc(studentModel.id)
+            .collection(DatabaseModel.studentAttendanceCollection)
+            .doc(refDoc.id)
+            .collection(DatabaseModel.slotCollection)
+            .add(slot.toMap());
+        await _firestore
+            .collection(DatabaseModel.studentCollection)
+            .doc(studentModel.id)
+            .collection(DatabaseModel.studentAttendanceCollection)
+            .doc(refDoc.id)
+            .collection(DatabaseModel.slotCollection)
+            .doc(doc.id)
+            .update({'id': doc.id});
+      }
+      return true;
     } catch (e) {
-      print("Error adding attendance: $e");
+      SnackBarHelper.showSnackBar(
+        title: "Error",
+        message: "Error adding student attendance: $e",
+        contentType: ContentType.failure,
+      );
+      return false;
     }
   }
 
-  Future<void> updateAttendance(String branchId, String semesterId,
-      String sectionId, String date, Map<String, dynamic> data) async {
+  Future<List<StudentAttendanceModel>> getStudentAttendance(
+      StudentModel studentModel) async {
+    final List<StudentAttendanceModel> listOfStudentAttendance = [];
+
+    try {
+      final snap = await _firestore
+          .collection(DatabaseModel.studentCollection)
+          .doc(studentModel.id)
+          .collection(DatabaseModel.studentAttendanceCollection)
+          .get();
+
+      for (final doc in snap.docs) {
+        if (doc.exists && doc.data().isNotEmpty) {
+          final slots = await _firestore
+              .collection(DatabaseModel.studentCollection)
+              .doc(studentModel.id)
+              .collection(DatabaseModel.studentAttendanceCollection)
+              .doc(doc.id)
+              .collection(DatabaseModel.slotCollection)
+              .get();
+
+          List<SemesterAttendanceModel> listOfSemesterAttendance = [];
+          print(slots.docs.length);
+          for (final slot in slots.docs) {
+            if (slot.exists && slot.data().isNotEmpty) {
+              listOfSemesterAttendance
+                  .add(SemesterAttendanceModel.fromJson(slot.data()));
+            }
+          }
+          listOfStudentAttendance.add(StudentAttendanceModel.fromJson(
+              doc.data(), listOfSemesterAttendance));
+        }
+      }
+    } catch (e) {
+      SnackBarHelper.showSnackBar(
+        title: "Error",
+        message: "Error getting student attendance: $e",
+        contentType: ContentType.failure,
+      );
+    }
+    return listOfStudentAttendance;
+  }
+
+  Future<void> addAttendance(
+      {required Map<String, dynamic> args,
+      required List<String> present,
+      required List<String> absent}) async {
     try {
       await _firestore
-          .collection('Branches')
-          .doc(branchId)
-          .collection('Semesters')
-          .doc(semesterId)
-          .collection('Sections')
-          .doc(sectionId)
-          .collection('Attendance')
-          .doc(date)
-          .update(data);
+          .collection(DatabaseModel.attendanceCollection)
+          .doc(args["attendanceModelId"])
+          .collection(DatabaseModel.dayCollection)
+          .doc(args["attendanceDayModelId"])
+          .collection(DatabaseModel.slotCollection)
+          .doc(args["attendanceSlotModelId"])
+          .update({"present": present, "absent": absent, "marked": true});
+
+      SnackBarHelper.showSnackBar(
+        title: "Success",
+        message: "Added successfully",
+        contentType: ContentType.success,
+      );
     } catch (e) {
-      print("Error updating attendance: $e");
+      SnackBarHelper.showSnackBar(
+        title: "Error",
+        message: "Error adding attendance: $e",
+        contentType: ContentType.failure,
+      );
     }
   }
 }

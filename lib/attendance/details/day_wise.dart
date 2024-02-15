@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gncms_clone/custom_widgets/attendance_detail_card.dart';
-import 'package:gncms_clone/getX/controllers/user_controllers/student_user_controller.dart';
+import 'package:gncms_clone/getX/controllers/user_controllers/student/student_user_controller.dart';
 import 'package:gncms_clone/initial_data.dart';
 import 'package:intl/intl.dart';
 
@@ -116,7 +116,8 @@ class _DayWiseDetailsState extends State<DayWiseDetails> {
             height: 10,
           ),
           //if null this
-          if (userController.attendanceModels == null)
+          if (userController.getUser().semester !=
+              userController.attendanceController!.attendanceModel!.semester)
             const Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -133,10 +134,11 @@ class _DayWiseDetailsState extends State<DayWiseDetails> {
                 ],
               ),
             ),
-          if (userController.attendanceModels != null)
-            for (var entry in userController.attendanceModels!)
+          if (userController.attendanceController?.attendanceModel != null)
+            for (var entry
+                in userController.attendanceController!.attendanceModel!.days)
               AttendanceDayDetailCard(
-                date: entry.time.toDate(),
+                date: entry.time,
                 dayNumber: 1,
                 currentDay: '',
                 currentDayOfTimeTable: {},

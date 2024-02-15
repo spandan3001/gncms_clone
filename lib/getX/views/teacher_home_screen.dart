@@ -1,14 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gncms_clone/getX/controllers/main_controller.dart';
-import 'package:gncms_clone/getX/controllers/user_controllers/teacher_user_controller.dart';
+import 'package:gncms_clone/getX/controllers/user_controllers/teacher/teacher_user_controller.dart';
 import 'package:gncms_clone/getX/values/app_colors.dart';
-import 'package:gncms_clone/main.dart';
 import 'package:gncms_clone/teacher/teacher_time_table_screen.dart';
 import '../../custom_widgets/profile_card.dart';
 import '../../custom_widgets/small_card.dart';
-import '../data/model/timetable_model.dart';
 import '../route/app_routes.dart';
 import 'student_home_screen.dart';
 
@@ -17,7 +14,6 @@ class TeacherHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mainController = Get.find<MainController>();
     final userController = Get.find<TeacherController>();
     final userModel = userController.getUser();
     var size = MediaQuery.sizeOf(context);
@@ -94,7 +90,8 @@ class TeacherHomeScreen extends StatelessWidget {
                           ),
                           Text(
                             userModel?.email ?? 'email',
-                            style: TextStyle(color: Colors.white, fontSize: 12),
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 12),
                           ),
                         ],
                       ),
@@ -134,15 +131,7 @@ class TeacherHomeScreen extends StatelessWidget {
                 CardWidget(
                   icon: Icons.calendar_month,
                   cardName: 'Academic Calender',
-                  onPressed: () async {
-                    final query =
-                        await mainController.firestoreController.testGc();
-
-                    print(query.size);
-
-                    //print("${query.docs.length} hello");
-                    //print("${query.docs.first.data()} hello");
-                  },
+                  onPressed: () async {},
                   iconColor: Colors.tealAccent,
                 ),
                 CardWidget(
@@ -157,8 +146,7 @@ class TeacherHomeScreen extends StatelessWidget {
                   icon: Icons.people,
                   cardName: 'Pending Attendance',
                   onPressed: () async {
-                    await userController.getListOfTimetableModel();
-                    Get.toNamed(AppRoutes.getClassListScreen);
+                    await userController.setAttendanceControllerAndGoScreen();
                   },
                   iconColor: Colors.deepPurple,
                 ),
@@ -206,7 +194,7 @@ class TeacherHomeScreen extends StatelessWidget {
         break;
       case 3:
         final mainController = Get.find<MainController>();
-        mainController.logOut();
+        mainController.loginController.logOut();
         break;
     }
   }

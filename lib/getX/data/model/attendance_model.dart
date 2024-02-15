@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AttendanceModel {
@@ -15,19 +13,22 @@ class AttendanceModel {
   final String branch;
   final String section;
   final String semester;
-  final Timestamp startTime;
-  final Timestamp endTime;
+  final DateTime startTime;
+  final DateTime endTime;
   final String id;
 
-  factory AttendanceModel.fromJson(Map<String, dynamic> json) {
+  factory AttendanceModel.fromJson(
+      Map<String, dynamic> json, List<AttendanceDayModel> days) {
+    Timestamp timestampStart = json['startTime'];
+    Timestamp timestampEnd = json['endTime'];
     return AttendanceModel(
-        days: json['attendanceList'],
+        days: days,
         branch: json['branch'],
         section: json['section'],
         semester: json['semester'],
         id: json['id'],
-        startTime: json['startTime'],
-        endTime: json['endTime']);
+        startTime: timestampStart.toDate(),
+        endTime: timestampEnd.toDate());
   }
   Map<String, dynamic> toJson() {
     return {
@@ -44,7 +45,7 @@ class AttendanceModel {
 
 class AttendanceDayModel {
   final String id;
-  final Timestamp time;
+  final DateTime time;
   final List<AttendanceSlotModel> slots;
 
   AttendanceDayModel({
@@ -53,11 +54,13 @@ class AttendanceDayModel {
     required this.time,
   });
 
-  factory AttendanceDayModel.fromFirestore(Map<String, dynamic> data) {
+  factory AttendanceDayModel.fromFirestore(
+      Map<String, dynamic> data, List<AttendanceSlotModel> slots) {
+    Timestamp timestamp = data['time'];
     return AttendanceDayModel(
       id: data['id'] ?? "",
-      time: data['time'],
-      slots: data['slots'],
+      time: timestamp.toDate(),
+      slots: slots,
     );
   }
 
@@ -85,16 +88,17 @@ class AttendanceSlotModel {
   final List<dynamic> absent;
   final String class_;
   final String tdId;
-  final Timestamp time;
+  final DateTime time;
   final String subject;
   final bool marked;
   factory AttendanceSlotModel.fromJson(Map<String, dynamic> json) {
+    Timestamp timestamp = json['time'];
     return AttendanceSlotModel(
       absent: json['absent'],
       id: json['id'],
       present: json['present'],
       class_: json['class'],
-      time: json['time'],
+      time: timestamp.toDate(),
       marked: json['marked'],
       subject: json['subject'],
       tdId: json['tdId'],

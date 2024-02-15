@@ -30,7 +30,6 @@ class TimetableModel {
       'branch': branch,
       'section': section,
       'semester': semester,
-      'days': days,
       'id': id
     };
   }
@@ -38,7 +37,7 @@ class TimetableModel {
 
 class DayModel {
   final String id;
-  final Timestamp time;
+  final DateTime time;
   final List<SlotModel> slots;
 
   DayModel({
@@ -48,9 +47,11 @@ class DayModel {
   });
 
   factory DayModel.fromFirestore(Map<String, dynamic> data) {
+    Timestamp timestamp = data['time'];
+    final dateTime = timestamp.toDate();
     return DayModel(
       id: data['id'] ?? "",
-      time: data['time'],
+      time: dateTime,
       slots: data['days'],
     );
   }
@@ -65,7 +66,7 @@ class SlotModel {
   final String subject;
   final String id;
   final String tdId;
-  final Timestamp time;
+  final DateTime time;
 
   SlotModel({
     required this.class_,
@@ -76,16 +77,14 @@ class SlotModel {
   });
 
   factory SlotModel.fromFirestore(Map<String, dynamic> data) {
-    if (data['subject'] == null) {
-      print(data);
-      print("yes");
-    }
+    Timestamp timestamp = data['time'];
+    final dateTime = timestamp.toDate();
     return SlotModel(
         class_: data['class'],
         tdId: data['tdId'],
         subject: data['subject'] ?? "",
         id: data['id'],
-        time: data['time']);
+        time: dateTime);
   }
   Map<String, dynamic> toMap() {
     return {

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gncms_clone/getX/controllers/user_controllers/teacher_user_controller.dart';
-import 'package:gncms_clone/getX/route/app_routes.dart';
-
+import 'package:gncms_clone/getX/controllers/user_controllers/teacher/attendance_controller.dart';
+import 'package:gncms_clone/getX/controllers/user_controllers/teacher/teacher_user_controller.dart';
+import 'package:gncms_clone/getX/data/model/attendance_model.dart';
+import 'package:gncms_clone/getX/utils/common_widgets/app_bar.dart';
 import '../controllers/main_controller.dart';
-import '../data/model/timetable_model.dart';
 
 class ClassListScreen extends StatefulWidget {
   const ClassListScreen({super.key});
@@ -17,20 +17,24 @@ class _ClassListScreenState extends State<ClassListScreen> {
   final mainController = Get.find<MainController>();
   final userController = Get.find<TeacherController>();
 
-  Map<String, List<TimetableModel>> semesterList = {};
+  List<AttendanceModel> semesterSectionList = [];
 
   @override
   void initState() {
     super.initState();
-    semesterList = userController.initAttendanceScreen();
+    semesterSectionList =
+        userController.attendanceController!.listOfAttendanceModel;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Class List'),
-      ),
+      appBar: customAppBar(
+          title: 'Class List',
+          onPressed: () {
+            userController.attendanceController!.dispose();
+            Get.back();
+          }),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -41,96 +45,32 @@ class _ClassListScreenState extends State<ClassListScreen> {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: semesterList.length,
+              itemCount: semesterSectionList.length,
               itemBuilder: (context, index) {
-                final semesterData = semesterList.values.elementAt(index);
+                var attendanceModel = semesterSectionList.elementAt(index);
                 return GestureDetector(
-                  onTap: () {
-                    // You can fetch sections based on selected semester if required
-                    // For simplicity, let's navigate directly to sections
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            SectionListScreen(semesterData: semesterData),
-                      ),
-                    );
+                  onTap: () async {
+                    await userController.attendanceController!
+                        .goNextSecSemScreen(
+                            section: attendanceModel.section,
+                            semester: attendanceModel.semester);
                   },
                   child: Card(
                     margin:
                         const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: ListTile(
-                      title: Text(semesterData.first.semester),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class SectionListScreen extends StatelessWidget {
-  final List<TimetableModel> semesterData;
-
-  const SectionListScreen({Key? key, required this.semesterData})
-      : super(key: key);
-
-  Map<String, TimetableModel> init() {
-    Map<String, TimetableModel> sectionList = {};
-
-    for (TimetableModel timetableModel in semesterData) {
-      // Get semester, section, and branch
-      String section = timetableModel.section;
-
-      // Create or get the map for the semester
-      sectionList[section] = timetableModel;
-    }
-    return sectionList;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    Map<String, TimetableModel> sectionList = init();
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Section List - ${semesterData.first.semester}'),
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(16),
-            child: Text('Select Section',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: sectionList.length,
-              itemBuilder: (context, index) {
-                final sectionData = sectionList.values.elementAt(index);
-                return GestureDetector(
-                  onTap: () {
-                    // You can fetch classes based on selected section if required
-                    // For simplicity, let's navigate directly to class list
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ClassListInSectionScreen(
-                          timetableModel: sectionData,
-                        ),
+                      title: Row(
+                        children: [
+                          const Text("Semester:-"),
+                          Text(attendanceModel.semester),
+                        ],
                       ),
-                    );
-                  },
-                  child: Card(
-                    margin:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: ListTile(
-                      title: Text(sectionData.section),
+                      subtitle: Row(
+                        children: [
+                          const Text("Section:-"),
+                          Text(attendanceModel.section.toUpperCase()),
+                        ],
+                      ),
                     ),
                   ),
                 );
@@ -144,20 +84,22 @@ class SectionListScreen extends StatelessWidget {
 }
 
 class ClassListInSectionScreen extends StatelessWidget {
-  final TimetableModel timetableModel;
-
   const ClassListInSectionScreen({
     Key? key,
-    required this.timetableModel,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final userController = Get.find<TeacherController>();
+    final attendanceController = userController.attendanceController!;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-            'Class List - ${timetableModel.semester} (${timetableModel.section.toUpperCase()})'),
-      ),
+      appBar: customAppBar(
+          title:
+              'Class List - ${attendanceController.currentAttendanceModel!.value.semester} (${attendanceController.currentAttendanceModel!.value.section.toUpperCase()})',
+          onPressed: () {
+            userController.attendanceController!.currentAttendanceModel = null;
+            Get.back();
+          }),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -167,54 +109,72 @@ class ClassListInSectionScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: timetableModel.days.length,
-              itemBuilder: (context, index) {
-                final dayData = timetableModel.days[index];
-                return ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: dayData.slots.length,
+            child: Obx(() => ListView.builder(
+                  itemCount: attendanceController
+                      .currentAttendanceModel!.value.days.length,
                   itemBuilder: (context, index) {
-                    final classData = dayData.slots[index];
-                    return GestureDetector(
-                      onTap: () async {
-                        final userController = Get.find<TeacherController>();
-                        await userController.getStudents(
-                            branch: timetableModel.branch,
-                            semester: timetableModel.semester,
-                            section: timetableModel.section);
-                        Get.toNamed(AppRoutes.getMarkAttendanceScreen);
-                      },
-                      child: Card(
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 8),
-                        child: ListTile(
-                          title: Text(classData.class_),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
+                    final dayModel = attendanceController
+                        .currentAttendanceModel!.value.days[index];
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: dayModel.slots.length,
+                      itemBuilder: (context, index) {
+                        final slotModel = dayModel.slots[index];
+                        return GestureDetector(
+                          onTap: () {
+                            final userController =
+                                Get.find<TeacherController>();
+                            userController.attendanceController!
+                                .goToMarkAttendanceScreen(
+                                    attendanceController
+                                        .currentAttendanceModel!.value,
+                                    dayModel.id,
+                                    slotModel.id);
+                          },
+                          child: Card(
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
+                            child: ListTile(
+                              title: Text(slotModel.class_),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(classData.time.toDate().day.toString()),
-                                  const SizedBox(width: 2),
-                                  Text(
-                                      classData.time.toDate().month.toString()),
-                                  const SizedBox(width: 2),
-                                  Text(classData.time.toDate().year.toString()),
+                                  const SizedBox(height: 2),
+                                  Row(
+                                    children: [
+                                      const Text("Date:-"),
+                                      const SizedBox(width: 2),
+                                      Text(slotModel.time.day.toString()),
+                                      const SizedBox(width: 2),
+                                      Text(slotModel.time.month.toString()),
+                                      const SizedBox(width: 2),
+                                      Text(slotModel.time.year.toString()),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      const Text("Time:-"),
+                                      const SizedBox(width: 2),
+                                      Text(slotModel.time.hour.toString()),
+                                      const SizedBox(width: 2),
+                                      const Text(":"),
+                                      const SizedBox(width: 2),
+                                      Text(slotModel.time.minute.toString()),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(slotModel.subject),
                                 ],
                               ),
-                              Text(classData.subject),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
+                        );
+                      },
                     );
                   },
-                );
-              },
-            ),
-          )
+                )),
+          ),
         ],
       ),
     );

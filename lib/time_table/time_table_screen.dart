@@ -72,9 +72,9 @@ class TimeTableScreenState extends State<TimeTableScreen>
     return Scaffold(
       appBar: AppBar(
           backgroundColor: Colors.black,
-          title: Column(
+          title: const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 Text("Time Table"),
                 Text(
                   'By Spandan',

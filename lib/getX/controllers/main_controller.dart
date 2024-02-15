@@ -1,11 +1,10 @@
 // Import necessary packages
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:gncms_clone/getX/controllers/firestore_controller.dart';
 import 'package:gncms_clone/getX/controllers/login_controller.dart';
 import 'package:gncms_clone/getX/controllers/register_controller.dart';
-import 'package:gncms_clone/getX/controllers/user_controllers/student_user_controller.dart';
-import 'package:gncms_clone/getX/controllers/user_controllers/teacher_user_controller.dart';
+import 'package:gncms_clone/getX/controllers/user_controllers/student/student_user_controller.dart';
+import 'package:gncms_clone/getX/controllers/user_controllers/teacher/teacher_user_controller.dart';
 
 import '../../constants.dart';
 import '../data/model/database_model.dart';
@@ -31,27 +30,20 @@ class MainController extends GetxController {
     await init();
   }
 
-  void logOut() async {
-    FirebaseAuth.instance.signOut();
-    await repository.disposeUser();
-    Get.offAndToNamed(AppRoutes.getLoginRoute);
-  }
-
   Future<void> init() async {
     try {
       await repository.init();
       // After initializing the repository, set the user controller
-      setUserControllerFromPrefs();
+      setUserControllerFromLocalStorage();
     } catch (e) {
       // Handle initialization errors
       print('Error initializing repository: $e');
     }
   }
 
-  void setUserControllerFromPrefs() async {
+  void setUserControllerFromLocalStorage() async {
     try {
       final userModelMap = await repository.getCurrentUserModel();
-      print(userModelMap);
 
       if (userModelMap == null || userModelMap.isEmpty) {
         Get.toNamed(AppRoutes.getLoginRoute);
@@ -66,7 +58,6 @@ class MainController extends GetxController {
 
         setUserController(
             TeacherModel.fromJson(userModelMap), UserType.teacher);
-        print("yes--------------------------");
         Get.toNamed(AppRoutes.getTeacherHomeRoute);
       }
     } catch (e) {

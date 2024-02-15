@@ -5,8 +5,6 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:gncms_clone/getX/controllers/main_controller.dart';
 import '../../constants.dart';
-import '../data/model/student_model.dart';
-import '../data/model/teacher_model.dart';
 import '../route/app_routes.dart';
 import '../utils/helpers/snackbar_helper.dart';
 import '../values/app_regex.dart';
@@ -51,6 +49,13 @@ class LoginController extends GetxController {
     } else {
       fieldValidNotifier.value = false;
     }
+  }
+
+  void logOut() async {
+    final MainController mainController = Get.find<MainController>();
+    FirebaseAuth.instance.signOut();
+    await mainController.repository.disposeUser();
+    Get.offNamed(AppRoutes.getLoginRoute);
   }
 
   Future<User?> signIn() async {

@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:gncms_clone/time_table/time_table_screen.dart';
 
 import '../controllers/main_controller.dart';
-import '../controllers/user_controllers/student_user_controller.dart';
+import '../controllers/user_controllers/student/student_user_controller.dart';
 import '../data/model/student_model.dart';
 import '../route/app_routes.dart';
 import '../values/app_colors.dart';
@@ -242,21 +242,10 @@ class StudentHomeScreen extends StatelessWidget {
                     icon: Icons.people,
                     cardName: 'Attendance',
                     onPressed: () async {
-                      showDialog(
-                        useRootNavigator: false,
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (context) {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        },
-                      );
-                      NavigatorState state = Navigator.of(context);
-                      //await globalObj.getAttendance();
-                      //InitialData.globalUserAllTotalPercentage =
-                      //evaluateAttendance();
-                      state.pop();
-                      state.pushNamed(AttendanceScreen.id);
+                      userController.setAttendanceController();
+                      await userController.attendanceController!
+                          .checkStudentAttendance();
+                      Get.toNamed(AppRoutes.getStudentAttendanceScreen);
                     },
                     iconColor: Colors.deepPurple,
                   ),
@@ -308,7 +297,7 @@ class StudentHomeScreen extends StatelessWidget {
         break;
       case 3:
         final mainController = Get.find<MainController>();
-        mainController.logOut();
+        mainController.loginController.logOut();
         break;
     }
   }

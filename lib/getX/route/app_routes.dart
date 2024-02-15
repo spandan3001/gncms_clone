@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:gncms_clone/attendance/attendance_screen.dart';
 import 'package:gncms_clone/getX/views/class_list.dart';
 import 'package:gncms_clone/getX/views/mark_attendance_screen.dart';
 import 'package:gncms_clone/getX/views/register_screen.dart';
@@ -15,8 +16,10 @@ class AppRoutes {
   static const _splashScreen = '/';
   static const _loginScreen = '/login';
   static const _registerScreen = '/register';
+  static const _classListInSemesterSectionScreen = '/classListSemesterSection';
   static const _attendanceDetailScreen = '/detail';
   static const _markAttendanceScreen = '/markAttendance';
+  static const _studentAttendanceScreen = '/studentAttendance';
   static const _classListScreen = '/classList';
 
   static String get getStudentHomeRoute => _studentHomeScreen;
@@ -25,7 +28,10 @@ class AppRoutes {
   static String get getRegisterRoute => _registerScreen;
   static String get getLoginRoute => _loginScreen;
   static String get getAttendanceDetailScreen => _attendanceDetailScreen;
+  static String get getStudentAttendanceScreen => _studentAttendanceScreen;
   static String get getMarkAttendanceScreen => _markAttendanceScreen;
+  static String get getClassListInSemesterSectionScreen =>
+      _classListInSemesterSectionScreen;
   static String get getClassListScreen => _classListScreen;
 
   static final List<GetPage> pages = [
@@ -35,7 +41,12 @@ class AppRoutes {
     GetPage(name: _registerScreen, page: () => const RegisterScreen()),
     GetPage(name: _teacherHomeScreen, page: () => const TeacherHomeScreen()),
     GetPage(name: _attendanceDetailScreen, page: () => const DetailsScreen()),
+    GetPage(
+        name: _studentAttendanceScreen, page: () => const AttendanceScreen()),
     GetPage(name: _classListScreen, page: () => const ClassListScreen()),
+    GetPage(
+        name: _classListInSemesterSectionScreen,
+        page: () => const ClassListInSectionScreen()),
     GetPage(
         name: _markAttendanceScreen, page: () => const MarkAttendanceScreen()),
   ];
