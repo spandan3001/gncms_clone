@@ -2,6 +2,11 @@
 
 The Student College Management App is a comprehensive solution for managing student information, attendance, and academic records in a college setting.
 
+## App ScreenShots
+
+![](../../gncms_github/Screenshot_20240216_003337.png)![](../../gncms_github/Screenshot_20240216_003409.png)![](../../gncms_github/Screenshot_20240216_003423.png)![](../../gncms_github/Screenshot_20240216_003449.png)![](../../gncms_github/Screenshot_20240216_003510.png)![](../../gncms_github/Screenshot_20240216_003532.png)![](../../gncms_github/Screenshot_20240216_003644.png)![](../../gncms_github/Screenshot_20240216_003719.png)![](../../gncms_github/Screenshot_20240216_003732.png)![](../../gncms_github/Screenshot_20240216_003750.png)
+
+
 ## Features
 
 - **User Authentication:** Secure login and registration for students, teachers, and administrators.
