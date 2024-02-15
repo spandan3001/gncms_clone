@@ -3,8 +3,18 @@
 The Student College Management App is a comprehensive solution for managing student information, attendance, and academic records in a college setting.
 
 ## App ScreenShots
+![Screenshot_20240216_003750](https://github.com/spandan3001/gncms_clone/assets/73657279/6ee6cb90-3f4e-41bc-8122-e22b9190f9dd)
+![Screenshot_20240216_003732](https://github.com/spandan3001/gncms_clone/assets/73657279/c9cb9026-a51f-4901-9202-b344d8a6b5e8)
+![Screenshot_20240216_003719](https://github.com/spandan3001/gncms_clone/assets/73657279/dd1a9aa9-88f1-4dc4-ad79-cb7652a38e64)
+![Screenshot_20240216_003644](https://github.com/spandan3001/gncms_clone/assets/73657279/0170d85e-c1fe-44ce-8209-a0ce15a23ded)
+![Screenshot_20240216_003532](https://github.com/spandan3001/gncms_clone/assets/73657279/bd62e6e9-cb2a-4cac-9835-132ddb0ae34d)
+![Screenshot_20240216_003510](https://github.com/spandan3001/gncms_clone/assets/73657279/2b351c8e-b2ee-4a95-9328-5059396c805b)
+![Screenshot_20240216_003449](https://github.com/spandan3001/gncms_clone/assets/73657279/af10d7d2-d29d-4917-b3c7-3e8a814f629a)
+![Screenshot_20240216_003423](https://github.com/spandan3001/gncms_clone/assets/73657279/b86cf81a-ea43-4e42-a719-309f90989ece)
+![Screenshot_20240216_003409](https://github.com/spandan3001/gncms_clone/assets/73657279/d0806f73-a4c3-4133-8c62-81665a3658a8)
+![Screenshot_20240216_003337](https://github.com/spandan3001/gncms_clone/assets/73657279/2f81bc03-08b5-4c53-8c2b-4c1a3dea6e0e)
 
-![](../../gncms_github/Screenshot_20240216_003337.png)![](../../gncms_github/Screenshot_20240216_003409.png)![](../../gncms_github/Screenshot_20240216_003423.png)![](../../gncms_github/Screenshot_20240216_003449.png)![](../../gncms_github/Screenshot_20240216_003510.png)![](../../gncms_github/Screenshot_20240216_003532.png)![](../../gncms_github/Screenshot_20240216_003644.png)![](../../gncms_github/Screenshot_20240216_003719.png)![](../../gncms_github/Screenshot_20240216_003732.png)![](../../gncms_github/Screenshot_20240216_003750.png)
+
 
 
 ## Features
