@@ -36,7 +36,7 @@ class AttendanceCard extends StatelessWidget {
             final userController = Get.find<StudentController>();
             userController.attendanceController!
                 .setCurrentStudentAttendanceModel(studentAttendanceModel);
-            Get.toNamed(AppRoutes.getAttendanceDetailScreen);
+            Get.toNamed(AppRoutes.getSubjectAttendanceScreen);
           },
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),

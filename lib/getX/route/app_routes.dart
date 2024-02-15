@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:gncms_clone/attendance/attendance_screen.dart';
+import 'package:gncms_clone/attendance/details/subject_wise.dart';
 import 'package:gncms_clone/getX/views/class_list.dart';
 import 'package:gncms_clone/getX/views/mark_attendance_screen.dart';
 import 'package:gncms_clone/getX/views/register_screen.dart';
@@ -14,6 +15,7 @@ class AppRoutes {
   static const _studentHomeScreen = '/studentHome';
   static const _teacherHomeScreen = '/teacherHome';
   static const _splashScreen = '/';
+  static const _subjectAttendanceScreen = '/subjectScreen';
   static const _loginScreen = '/login';
   static const _registerScreen = '/register';
   static const _classListInSemesterSectionScreen = '/classListSemesterSection';
@@ -30,6 +32,8 @@ class AppRoutes {
   static String get getAttendanceDetailScreen => _attendanceDetailScreen;
   static String get getStudentAttendanceScreen => _studentAttendanceScreen;
   static String get getMarkAttendanceScreen => _markAttendanceScreen;
+  static String get getSubjectAttendanceScreen => _subjectAttendanceScreen;
+
   static String get getClassListInSemesterSectionScreen =>
       _classListInSemesterSectionScreen;
   static String get getClassListScreen => _classListScreen;
@@ -41,6 +45,8 @@ class AppRoutes {
     GetPage(name: _registerScreen, page: () => const RegisterScreen()),
     GetPage(name: _teacherHomeScreen, page: () => const TeacherHomeScreen()),
     GetPage(name: _attendanceDetailScreen, page: () => const DetailsScreen()),
+    GetPage(
+        name: _subjectAttendanceScreen, page: () => const SubjectWiseDetails()),
     GetPage(
         name: _studentAttendanceScreen, page: () => const AttendanceScreen()),
     GetPage(name: _classListScreen, page: () => const ClassListScreen()),
